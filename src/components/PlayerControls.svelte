@@ -1,206 +1,209 @@
 <script>
-// @ts-nocheck
-
-    import { onMount, createSignal, onDestroy } from 'svelte';
-    
-    // Props
-    export let audio;
-    export let partStartInput;
-    export let partEndInput;
-    export let saveSettings;
-    export let settings;
-    
-    // Local state
-    const [playbackRate, setPlaybackRate] = createSignal(1.00);
-    let playbackInterval;
-    
-    // Utility functions
-    const intBound = (int, min, max) => Math.max(Math.min(int, max), min);
-    
-    onMount(() => {
-      // Initialize controls with saved settings
-      const savedSettings = settings();
-      
-      Object.keys(savedSettings)
-        .filter(id => document.getElementById(id))
-        .forEach(id => {
-          document.getElementById(id).value = savedSettings[id];
-        });
-        
-      // Set initial playback rate from settings
-      if (audio && savedSettings['play-speed']) {
-        audio.playbackRate = parseFloat(savedSettings['play-speed']);
-        setPlaybackRate(audio.playbackRate);
-      }
-    });
+  // @ts-nocheck
+  import { onMount, onDestroy } from 'svelte';
   
-    onDestroy(() => {
-      if (playbackInterval) {
-        clearInterval(playbackInterval);
-      }
-    });
-    
-    function handleButtonAction(e, action) {
-      // Extract the information from the button clicked
-      const button = e.currentTarget;
-      const isIncrease = button.classList.contains('increase');
+  // Props using Svelte 5 Runes syntax
+  let { audio, partStartInput, partEndInput, saveSettings, settings } = $props();
       
-      // Execute the appropriate action
+  // Local state using Svelte 5 $state
+  let playbackRate = $state(1.00);
+  let playbackInterval;
+      
+  // Utility functions
+  const intBound = (int, min, max) => Math.max(Math.min(int, max), min);
+      
+  onMount(() => {
+    // Initialize controls with saved settings
+    const savedSettings = settings;
+    
+    Object.keys(savedSettings)
+      .filter(id => document.getElementById(id))
+      .forEach(id => {
+        document.getElementById(id).value = savedSettings[id];
+      });
+      
+    // Set initial playback rate from settings
+    if (audio && savedSettings['play-speed']) {
+      audio.playbackRate = parseFloat(savedSettings['play-speed']);
+      playbackRate = audio.playbackRate;
+    }
+  });
+  
+  onDestroy(() => {
+    if (playbackInterval) {
+      clearInterval(playbackInterval);
+    }
+  });
+      
+  function handleButtonAction(e, action) {
+    // Extract the information from the button clicked
+    const button = e.currentTarget;
+    const isIncrease = button.classList.contains('increase');
+    
+    // Execute the appropriate action
+    if (action === 'speed') {
+      handleSpeedChange(isIncrease);
+    } else if (action === 'skip') {
+      handleSkip(isIncrease);
+    } else if (action === 'spinner') {
+      // Get the associated input
+      const input = isIncrease ? 
+        button.previousElementSibling : 
+        button.nextElementSibling;
+      handleRepChange(input, isIncrease);
+    }
+    
+    // Set up continuous action on long press
+    if (playbackInterval) {
+      clearInterval(playbackInterval);
+    }
+    
+    playbackInterval = setInterval(() => {
       if (action === 'speed') {
         handleSpeedChange(isIncrease);
       } else if (action === 'skip') {
         handleSkip(isIncrease);
       } else if (action === 'spinner') {
-        // Get the associated input
         const input = isIncrease ? 
           button.previousElementSibling : 
           button.nextElementSibling;
         handleRepChange(input, isIncrease);
       }
+    }, 150);
+  }
       
-      // Set up continuous action on long press
-      if (playbackInterval) {
-        clearInterval(playbackInterval);
+  // Add event listeners for mouseup and touchend to clear interval
+  function setupButtonInteractions() {
+    // Button interactions for speed and skip
+    const speedButtons = document.querySelectorAll('.speed');
+    const skipButtons = document.querySelectorAll('.skip');
+    const spinnerButtons = document.querySelectorAll('.spinner-cont button');
+    
+    // Add mousedown events
+    speedButtons.forEach(btn => {
+      btn.addEventListener('mousedown', (e) => handleButtonAction(e, 'speed'));
+      btn.addEventListener('touchstart', (e) => handleButtonAction(e, 'speed'));
+    });
+    
+    skipButtons.forEach(btn => {
+      btn.addEventListener('mousedown', (e) => handleButtonAction(e, 'skip'));
+      btn.addEventListener('touchstart', (e) => handleButtonAction(e, 'skip'));
+    });
+    
+    spinnerButtons.forEach(btn => {
+      btn.addEventListener('mousedown', (e) => handleButtonAction(e, 'spinner'));
+      btn.addEventListener('touchstart', (e) => handleButtonAction(e, 'spinner'));
+    });
+    
+    // Global handlers to clear interval
+    document.documentElement.addEventListener('mouseup', clearActionInterval);
+    document.documentElement.addEventListener('touchend', clearActionInterval);
+    
+    // Number input keyboard handling
+    const numberInputs = document.querySelectorAll('input[type="number"]');
+    numberInputs.forEach(input => {
+      input.addEventListener('keydown', handleNumberInputKeydown);
+    });
+  }
+      
+  function clearActionInterval() {
+    if (playbackInterval) {
+      clearInterval(playbackInterval);
+      playbackInterval = null;
+    }
+  }
+      
+  function handleNumberInputKeydown(e) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const targetButton = e.key === 'ArrowDown' ? 
+        e.target.previousElementSibling : 
+        e.target.nextElementSibling;
+      
+      handleRepChange(e.target, e.key === 'ArrowUp');
+    }
+  }
+      
+  function handleSpeedChange(increase) {
+    if (!audio) return;
+    
+    const newRate = intBound(audio.playbackRate + (0.1 * (increase ? 1 : -1)), 0.4, 4);
+    audio.playbackRate = newRate;
+    playbackRate = newRate;
+    
+    // Update display
+    const speedDisplay = document.getElementById('play-speed');
+    if (speedDisplay) {
+      const span = speedDisplay.querySelector('span');
+      if (span) {
+        span.textContent = newRate.toFixed(2) + 'x';
       }
-      
-      playbackInterval = setInterval(() => {
-        if (action === 'speed') {
-          handleSpeedChange(isIncrease);
-        } else if (action === 'skip') {
-          handleSkip(isIncrease);
-        } else if (action === 'spinner') {
-          const input = isIncrease ? 
-            button.previousElementSibling : 
-            button.nextElementSibling;
-          handleRepChange(input, isIncrease);
-        }
-      }, 150);
     }
     
-    // Add event listeners for mouseup and touchend to clear interval
-    function setupButtonInteractions() {
-      // Button interactions for speed and skip
-      const speedButtons = document.querySelectorAll('.speed');
-      const skipButtons = document.querySelectorAll('.skip');
-      const spinnerButtons = document.querySelectorAll('.spinner-cont button');
+    // Save setting
+    saveSettings('play-speed', newRate.toString());
+  }
       
-      // Add mousedown events
-      speedButtons.forEach(btn => {
-        btn.addEventListener('mousedown', (e) => handleButtonAction(e, 'speed'));
-        btn.addEventListener('touchstart', (e) => handleButtonAction(e, 'speed'));
-      });
+  function handleSkip(increase) {
+    if (!audio) return;
+    audio.currentTime += 5 * (increase ? 1 : -1);
+  }
       
-      skipButtons.forEach(btn => {
-        btn.addEventListener('mousedown', (e) => handleButtonAction(e, 'skip'));
-        btn.addEventListener('touchstart', (e) => handleButtonAction(e, 'skip'));
-      });
-      
-      spinnerButtons.forEach(btn => {
-        btn.addEventListener('mousedown', (e) => handleButtonAction(e, 'spinner'));
-        btn.addEventListener('touchstart', (e) => handleButtonAction(e, 'spinner'));
-      });
-      
-      // Global handlers to clear interval
-      document.documentElement.addEventListener('mouseup', clearActionInterval);
-      document.documentElement.addEventListener('touchend', clearActionInterval);
-      
-      // Number input keyboard handling
-      const numberInputs = document.querySelectorAll('input[type="number"]');
-      numberInputs.forEach(input => {
-        input.addEventListener('keydown', handleNumberInputKeydown);
-      });
-    }
+  function handleRepChange(el, increase) {
+    if (!el) return;
     
-    function clearActionInterval() {
-      if (playbackInterval) {
-        clearInterval(playbackInterval);
-        playbackInterval = null;
+    const id = el.id;
+    let val = el.value;
+    
+    if (el.type === 'number') {
+      val = +val + (increase ? 1 : -1);
+      if (val > el.max) {
+        val = 1;
+      } else if (val === 0) {
+        val = +el.max;
       }
-    }
-    
-    function handleNumberInputKeydown(e) {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        const targetButton = e.key === 'ArrowDown' ? 
-          e.target.previousElementSibling : 
-          e.target.nextElementSibling;
-        
-        handleRepChange(e.target, e.key === 'ArrowUp');
-      }
-    }
-    
-    function handleSpeedChange(increase) {
-      if (!audio) return;
-      
-      const newRate = intBound(audio.playbackRate + (0.1 * (increase ? 1 : -1)), 0.4, 4);
-      audio.playbackRate = newRate;
-      setPlaybackRate(newRate);
-      
-      // Update display
-      const speedDisplay = document.getElementById('play-speed');
-      if (speedDisplay) {
-        const span = speedDisplay.querySelector('span');
-        if (span) {
-          span.textContent = newRate.toFixed(2) + 'x';
-        }
-      }
-      
-      // Save setting
-      saveSettings('play-speed', newRate.toString());
-    }
-    
-    function handleSkip(increase) {
-      if (!audio) return;
-      audio.currentTime += 5 * (increase ? 1 : -1);
-    }
-    
-    function handleRepChange(el, increase) {
-      if (!el) return;
-      
-      const id = el.id;
-      let val = el.value;
-      
-      if (el.type === 'number') {
+    } else if (id.endsWith('-reps')) {
+      if (val === '∞') {
+        val = increase ? 1 : 10;
+      } else {
         val = +val + (increase ? 1 : -1);
-        if (val > el.max) {
-          val = 1;
-        } else if (val === 0) {
-          val = +el.max;
-        }
-      } else if (id.endsWith('-reps')) {
-        if (val === '∞') {
-          val = increase ? 1 : 10;
-        } else {
-          val = +val + (increase ? 1 : -1);
-        }
-        if (val === 0 || val === 11) {
-          val = '∞';
-        }
-      } else if (id === 'delay') {
-        val = +(val.slice(0, -1)) + (increase ? 0.5 : -0.5);
-        if (val === 2.5) {
-          val = 2;
-        } else if (val === -0.5) {
-          val = 0;
-        }
-        val += 'x';
       }
+      if (val === 0 || val === 11) {
+        val = '∞';
+      }
+    } else if (id === 'delay') {
+      val = +(val.slice(0, -1)) + (increase ? 0.5 : -0.5);
+      if (val === 2.5) {
+        val = 2;
+      } else if (val === -0.5) {
+        val = 0;
+      }
+      val += 'x';
+    }
+    
+    el.value = val;
+    el.classList[el.validity.valid ? 'remove' : 'add']('invalid');
+    saveSettings(id, val);
+  }
       
-      el.value = val;
-      el.classList[el.validity.valid ? 'remove' : 'add']('invalid');
-      saveSettings(id, val);
-    }
-    
-    function handleInputChange(e) {
-      const el = e.target;
-      el.classList.toggle('invalid', !el.validity.valid);
-      saveSettings(el.id, el.value);
-    }
-    
-    // Setup button interactions after component mounts
-    onMount(setupButtonInteractions);
-  </script>
+  function handleInputChange(e) {
+    const el = e.target;
+    el.classList.toggle('invalid', !el.validity.valid);
+    saveSettings(el.id, el.value);
+  }
+      
+  // Setup button interactions after component mounts
+  onMount(setupButtonInteractions);
   
+  function handleTimeUpdate() {
+    // Add the timeUpdate handler if it's missing in Home.svelte
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      const event = new CustomEvent('timeupdate', { detail: audio });
+      document.dispatchEvent(event);
+    }
+  }
+  </script>
+    
   <div id="player-cont" class="rounded-lg shadow-md p-6 mb-6 bg-gray-100">
     <!-- Audio Player -->
     <audio 
@@ -209,6 +212,7 @@
       controls 
       controlsList="nodownload"
       class="w-full mb-4"
+      on:timeupdate={handleTimeUpdate}
     ></audio>
     
     <!-- Playback Controls -->
@@ -229,7 +233,7 @@
           <path d="M12 8v8M8 12h8" />
         </svg>
         <br/>
-        <span>{playbackRate().toFixed(2)}x</span>
+        <span>{playbackRate.toFixed(2)}x</span>
       </label>
       
       <!-- svelte-ignore a11y_consider_explicit_label -->
@@ -391,7 +395,7 @@
       </div>
     </div>
   </div>
-  
+    
   <style>
-
+  
   </style>
