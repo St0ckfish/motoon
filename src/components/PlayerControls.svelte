@@ -29,7 +29,7 @@
             </Button>
 
             <div id="play-speed" class="mx-3 flex flex-col items-center text-center">
-                <img src="/speed.svg" alt="speed" class="w-5" />
+                <img src="/public/speed.svg" alt="speed" class="w-5" />
                 <span class="text-sm font-medium">{playback_rate.toFixed(2)}x</span>
             </div>
             <Button
