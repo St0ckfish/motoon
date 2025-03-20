@@ -18,7 +18,7 @@
                 aria-label="Increase speed"
             >
                 <svg
-                    class="h-6 w-6"
+                    class="h-6 w-6 text-black"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -37,7 +37,7 @@
                 aria-label="Decrease speed"
             >
                 <svg
-                    class="h-6 w-6"
+                    class="h-6 w-6 text-black"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -54,7 +54,7 @@
                 aria-label="Skip forward 5 seconds"
             >
                 <svg
-                    class="h-6 w-6"
+                    class="h-6 w-6 text-black"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -70,7 +70,7 @@
                 aria-label="Skip backward 5 seconds"
             >
                 <svg
-                    class="h-6 w-6"
+                    class="h-6 w-6 text-black"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -89,7 +89,7 @@
                 <div class="mb-5 flex items-center justify-between">
                     <p class="ml-3 font-medium text-gray-600">من</p>
                     <Button
-                        class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                        class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                         aria-label="Decrease start">–</Button
                     >
                     <input
@@ -103,7 +103,7 @@
                         oninput={handle_input_change}
                     />
                     <Button
-                        class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                        class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                         aria-label="Increase start">+</Button
                     >
                 </div>
@@ -111,7 +111,7 @@
                 <div class="flex items-center justify-between">
                     <p class="ml-3 font-medium text-gray-600">إلى</p>
                     <Button
-                        class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                        class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                         aria-label="Decrease end">–</Button
                     >
                     <input
@@ -125,7 +125,7 @@
                         oninput={handle_input_change}
                     />
                     <Button
-                        class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                        class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                         aria-label="Increase end">+</Button
                     >
                 </div>
@@ -156,7 +156,7 @@
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
@@ -167,7 +167,7 @@
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -195,7 +195,7 @@
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
@@ -206,7 +206,7 @@
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -230,7 +230,7 @@
             </h3>
             <div class="flex items-center justify-center">
                 <Button
-                    class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                    class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                     >–</Button
                 >
                 <input
@@ -241,7 +241,7 @@
                     readonly
                 />
                 <Button
-                    class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                    class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
                     >+</Button
                 >
             </div>

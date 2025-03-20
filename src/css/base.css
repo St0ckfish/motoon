@@ -146,9 +146,25 @@ a:visited,
 }
 a,
 button,
-label,
-select {
+label {
   -webkit-tap-highlight-color: transparent;
+}
+
+@supports (-webkit-touch-callout: none) {
+  select {
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+    text-overflow: ellipsis;
+    padding-right: 25px; /* Ensure space for the dropdown arrow */
+  }
+  
+  /* Allow option text to display properly */
+  select option {
+    font-size: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    direction: rtl; /* Since your content is in Arabic */
+  }
 }
 
 .full-height {
