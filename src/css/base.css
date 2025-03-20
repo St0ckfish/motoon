@@ -68,6 +68,39 @@
   unicode-range: U+0;
 }
 
+@font-face {
+  font-family: 'Aref Ruqaa';
+  font-display: block;
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('Aref Ruqaa Regular'),
+    local('ArefRuqaa-Regular'),
+    url(https://fonts.gstatic.com/s/arefruqaa/v5/WwkbxPW1E165rajQKDulIIIoVfg61NfCHA.woff2)
+      format('woff2');
+  unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC;
+}
+@font-face {
+  font-family: Kitab;
+  font-style: normal;
+  font-display: block;
+  font-weight: 400;
+  src:
+    local(Kitab),
+    url(https://deendev.com/fonts/kitab.woff2) format('woff2'),
+    url(https://deendev.com/fonts/kitab.woff) format('woff');
+}
+@font-face {
+  font-family: Kitab;
+  font-style: normal;
+  font-display: block;
+  font-weight: 700;
+  src:
+    local(Kitab-Bold),
+    url(https://deendev.com/fonts/kitab-b.woff2) format('woff2'),
+    url(https://deendev.com/fonts/kitab-b.woff) format('woff');
+}
+
 :root {
   --dark-blue: #216693;
   --light-blue: #2995dc;
@@ -95,6 +128,7 @@ html {
 body {
   color: #444;
   overscroll-behavior-y: contain;
+  font-family: 'Kitab';
 }
 html.safari body {
   width: 100%;
