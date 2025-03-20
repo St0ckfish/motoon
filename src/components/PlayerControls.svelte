@@ -29,16 +29,64 @@
             </Button>
 
             <div id="play-speed" class="mx-3 flex flex-col items-center text-center">
-              <svg width="30px" height="30px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="48" height="48" fill="white" fill-opacity="0.01"/>
-                <path d="M30.2972 18.7786C30.2972 18.7786 27.0679 27.8808 25.5334 29.4699C23.9988 31.0591 21.4665 31.1033 19.8774 29.5687C18.2882 28.0341 18.244 25.5018 19.7786 23.9127C21.3132 22.3236 30.2972 18.7786 30.2972 18.7786Z" fill="#2F88FF" stroke="#000000" stroke-width="4" stroke-linejoin="round"/>
-                <path d="M38.8492 38.8492C42.6495 35.049 45 29.799 45 24C45 12.402 35.598 3 24 3C12.402 3 3 12.402 3 24C3 29.799 5.35051 35.049 9.15076 38.8492" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M24 4V8" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M38.8454 11.1421L35.7368 13.6593" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M42.5225 27.2328L38.6251 26.333" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M5.47749 27.2328L9.37497 26.333" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.15463 11.1421L12.2632 13.6593" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+                <svg
+                    width="30px"
+                    height="30px"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect width="48" height="48" fill="white" fill-opacity="0.01" />
+                    <path
+                        d="M30.2972 18.7786C30.2972 18.7786 27.0679 27.8808 25.5334 29.4699C23.9988 31.0591 21.4665 31.1033 19.8774 29.5687C18.2882 28.0341 18.244 25.5018 19.7786 23.9127C21.3132 22.3236 30.2972 18.7786 30.2972 18.7786Z"
+                        fill="#2F88FF"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M38.8492 38.8492C42.6495 35.049 45 29.799 45 24C45 12.402 35.598 3 24 3C12.402 3 3 12.402 3 24C3 29.799 5.35051 35.049 9.15076 38.8492"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M24 4V8"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M38.8454 11.1421L35.7368 13.6593"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M42.5225 27.2328L38.6251 26.333"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M5.47749 27.2328L9.37497 26.333"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M9.15463 11.1421L12.2632 13.6593"
+                        stroke="#000000"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
                 <span class="text-sm font-medium">{playback_rate.toFixed(2)}x</span>
             </div>
             <Button
@@ -91,52 +139,56 @@
         </div>
     </div>
 
-    <div id="repeat-cont" class="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <div id="repeat-cont" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div class="spinner-cont control-card rounded-lg bg-white p-4 shadow-sm">
             <h3 class="mb-4 text-center text-lg font-medium text-gray-700">نطاق التشغيل</h3>
             <div>
                 <div class="mb-5 flex items-center justify-between">
-                    <p class="ml-3 font-medium text-gray-600">من</p>
-                    <Button
-                        class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
-                        aria-label="Decrease start">–</Button
-                    >
-                    <input
-                        type="number"
-                        class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
-                        id="part-start"
-                        bind:this={part_start_input}
-                        value="1"
-                        min="1"
-                        required
-                        oninput={handle_input_change}
-                    />
-                    <Button
-                        class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
-                        aria-label="Increase start">+</Button
-                    >
+                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg">من</p>
+                    <div class="flex">
+                        <Button
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Decrease start">–</Button
+                        >
+                        <input
+                            type="number"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            id="part-start"
+                            bind:this={part_start_input}
+                            value="1"
+                            min="1"
+                            required
+                            oninput={handle_input_change}
+                        />
+                        <Button
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Increase start">+</Button
+                        >
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <p class="ml-3 font-medium text-gray-600">إلى</p>
-                    <Button
-                        class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
-                        aria-label="Decrease end">–</Button
-                    >
-                    <input
-                        type="number"
-                        class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
-                        id="part-end"
-                        bind:this={part_end_input}
-                        value="1"
-                        min="1"
-                        required
-                        oninput={handle_input_change}
-                    />
-                    <Button
-                        class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
-                        aria-label="Increase end">+</Button
-                    >
+                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg">إلى</p>
+                    <div class="flex">
+                        <Button
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Decrease end">–</Button
+                        >
+                        <input
+                            type="number"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            id="part-end"
+                            bind:this={part_end_input}
+                            value="1"
+                            min="1"
+                            required
+                            oninput={handle_input_change}
+                        />
+                        <Button
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Increase end">+</Button
+                        >
+                    </div>
                 </div>
             </div>
         </div>
@@ -147,7 +199,7 @@
                 <div class="mb-5 flex items-center">
                     <div class="ml-2 flex items-center">
                         <svg
-                            class="ml-2 h-6 w-6 text-blue-500"
+                            class="ml-2 h-6 w-6 max-[1235px]:w-5 max-[1235px]:h-5 text-blue-500"
                             width="24"
                             height="24"
                             viewBox="0 0 24 24"
@@ -161,22 +213,22 @@
                             <path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" />
                             <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3" /></svg
                         >
-                        <span class="text-gray-600">كامل</span>
+                        <span class="text-gray-600 text-sm sm:text-lg">كامل</span>
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
                             type="text"
-                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                             id="all-reps"
                             value="1"
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -185,7 +237,7 @@
                 <div class="flex items-center">
                     <div class="ml-2 flex items-center">
                         <svg
-                            class="ml-2 h-6 w-6 text-blue-500"
+                            class="ml-2 h-6 w-6 text-blue-500 max-[1235px]:w-5 max-[1235px]:h-5"
                             width="24"
                             height="24"
                             viewBox="0 0 24 24"
@@ -200,22 +252,22 @@
                             <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3" />
                             <path d="M11 11l1 -1v4" /></svg
                         >
-                        <span class="text-gray-600">مقطع</span>
+                        <span class="text-gray-600 text-sm sm:text-lg">مقطع</span>
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
                             type="text"
-                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                             id="part-reps"
                             value="1"
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -239,7 +291,7 @@
             </h3>
             <div class="flex items-center justify-center">
                 <Button
-                    class="decrease flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                    class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                     >–</Button
                 >
                 <input
@@ -250,7 +302,7 @@
                     readonly
                 />
                 <Button
-                    class="increase flex h-8 w-8 items-center justify-center rounded-full text-black bg-gray-100 shadow-sm transition-colors hover:bg-gray-200"
+                    class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                     >+</Button
                 >
             </div>
