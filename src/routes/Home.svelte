@@ -83,7 +83,7 @@
   function loadMatn(matnName, matnId) {
   console.log(`Loading matn: ${matnName}`);
   
-  fetch(`/data/الأرجوزة الميئية.txt`, { cache: 'no-cache' })
+  fetch(`/data/${matnId}.txt`, { cache: 'no-cache' })
     .then(r => {
       if (!r.ok) {
         console.error(`HTTP error: ${r.status} ${r.statusText}`);
@@ -205,20 +205,6 @@
         console.error("Input elements not found");
       }
     })
-    .catch(error => {
-      console.error("Error loading matn data:", error);
-      
-      // محاولة استخدام مسار بديل
-      console.log("Trying alternate path...");
-      fetch(`/data/الأرجوزة الميئية.txt`, { cache: 'no-cache' })
-        .then(r => {
-          console.log("Alternate path result:", r.status, r.ok);
-          if (!r.ok) {
-            console.error("Alternate path also failed");
-          }
-        })
-        .catch(e => console.error("Alternate path error:", e));
-    });
 }
   
 function loadPart() {
