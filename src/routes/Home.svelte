@@ -50,7 +50,7 @@ let text_container_el
 let tpl_cont_el
 
 onMount(() => {
-    clicker = new Audio('click.mp4')
+    clicker = new Audio('click.mp3')
 
     const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
 
