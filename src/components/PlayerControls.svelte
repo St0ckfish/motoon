@@ -87,7 +87,7 @@
                         stroke-linejoin="round"
                     />
                 </svg>
-                <span class="text-sm font-medium text-black">{playback_rate.toFixed(2)}x</span>
+                <p class="text-sm font-medium text-black z-50">{playback_rate.toFixed(2)}x</p>
             </div>
             <Button
                 class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
@@ -121,7 +121,7 @@
                 </svg>
             </Button>
 
-            <div class="mx-2 text-sm font-medium text-black">5s</div>
+            <p class="mx-2 text-sm font-medium text-black z-50">5s</p>
             <Button
                 class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
                 aria-label="Skip backward 5 seconds"
