@@ -50,20 +50,7 @@ let text_container_el
 let tpl_cont_el
 
 onMount(() => {
-    clicker = new Audio(`${window.location.origin}/click.mp3`);
-    fetch(clickSoundPath)
-        .then(response => {
-            if (response.ok) {
-                clicker = new Audio(clickSoundPath);
-            } else {
-                console.log('ملف الصوت غير موجود، تم تعطيل صوت النقر');
-                clicker = { play: () => {} }; // كائن وهمي به دالة play فارغة
-            }
-        })
-        .catch(error => {
-            console.error('خطأ في تحميل ملف الصوت:', error);
-            clicker = { play: () => {} };
-        });
+    clicker = new Audio('click.mp3')
 
     const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
 
