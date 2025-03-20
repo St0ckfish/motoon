@@ -83,5 +83,5 @@
             >
         </div>
     </div>
-    من مشاريع<a href="https://nuqayah.com" class="hover:underline" target="_blank">نُقاية</a>
+    <p class="flex gap-1 justify-center">من مشاريع<a href="https://nuqayah.com" class="hover:underline" target="_blank"> نُقاية </a></p>
 </footer>
