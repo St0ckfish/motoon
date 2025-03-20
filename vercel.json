@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "routes": [
+      { "handle": "filesystem" },
+      { "src": "/data/(.*)", "dest": "/data/$1" },
+      { "src": "/(.*)", "dest": "/index.html" }
+    ],
+    "outputDirectory": "dist"
+  }

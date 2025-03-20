@@ -94,9 +94,9 @@ function save_settings(id, value) {
 async function load_matn(matn_name, matn_id) {
     if (!part_start_input) part_start_input = document.querySelector('#part-start')
     if (!part_end_input) part_end_input = document.querySelector('#part-end')
-
+    const encodedMatnId = encodeURIComponent(matn_id);
     try {
-        const response = await fetch(`/data/${matn_id}.txt`, {cache: 'no-cache'})
+        const response = await fetch(`/data/${encodedMatnId}.txt`, {cache: 'no-cache'})
         const text = await response.text()
 
         if (!text || text.trim() === '') {

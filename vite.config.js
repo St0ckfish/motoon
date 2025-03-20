@@ -16,7 +16,7 @@ const vars = {
 
 /** @type {import('vite').UserConfig}*/
 export default {
-    publicDir: is_build ? false : 'public',
+    publicDir: 'public',
     build: {
         reportCompressedSize: false,
         minify: false,
