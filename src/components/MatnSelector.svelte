@@ -5,27 +5,27 @@
         class="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 text-lg leading-tight shadow hover:border-gray-400 focus:outline-none"
     >
         <optgroup label="متون">
-            <option value="الأرجوزة الميئية">الأرجوزة الميئية</option>
+            <option value="الأرجوزة الميئية">الأرجوزة الميئية</option>
             <option value="الجزرية">الجزرية</option>
-            <option value="تحفة الأطفال">تحفة الأطفال</option>
-            <option value="نظم الآجرومية">نظم الآجرومية</option>
+            <option value="تحفة الأطفال">تحفة الأطفال</option>
+            <option value="نظم الآجرومية">نظم الآجرومية</option>
             <option value="نظم الورقات">نظم الورقات</option>
             <option value="الرحبية">الرحبية</option>
             <option value="نظم المقصود">نظم المقصود</option>
             <option value="نظم نخبة الفكر">نظم نخبة الفكر</option>
-            <option value="مائة المعاني والبيان">مائة المعاني والبيان</option>
+            <option value="مائة المعاني والبيان">مائة المعاني والبيان</option>
         </optgroup>
         <optgroup label="المعلقات">
-            <option value="معلقة امرئ القيس">معلقة امرئ القيس</option>
+            <option value="معلقة امرئ القيس">معلقة امرئ القيس</option>
             <option value="معلقة طرفة">معلقة طرفة</option>
             <option value="معلقة زهير">معلقة زهير</option>
             <option value="معلقة عمرو بن كلثوم">معلقة عمرو بن كلثوم</option>
             <option value="معلقة عنترة">معلقة عنترة</option>
             <option value="معلقة لبيد">معلقة لبيد</option>
             <option value="معلقة الحارث">معلقة الحارث</option>
-            <option value="معلقة الأعشى">معلقة الأعشى</option>
+            <option value="معلقة الأعشى">معلقة الأعشى</option>
             <option value="معلقة النابغة">معلقة النابغة</option>
-            <option value="معلقة عبيد بن الأبرص">معلقة عبيد بن الأبرص</option>
+            <option value="معلقة عبيد بن الأبرص">معلقة عبيد بن الأبرص</option>
         </optgroup>
         <optgroup label="عيون الشعر">
             <option value="لامية العرب">لامية العرب</option>
