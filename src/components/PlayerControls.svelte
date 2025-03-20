@@ -152,7 +152,7 @@
                         >
                         <input
                             type="number"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                             id="part-start"
                             bind:this={part_start_input}
                             value="1"
@@ -176,7 +176,7 @@
                         >
                         <input
                             type="number"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                             id="part-end"
                             bind:this={part_end_input}
                             value="1"
@@ -222,7 +222,7 @@
                         >
                         <input
                             type="text"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                             id="all-reps"
                             value="1"
                             readonly
@@ -261,7 +261,7 @@
                         >
                         <input
                             type="text"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                             id="part-reps"
                             value="1"
                             readonly
