@@ -11,7 +11,7 @@
         ontimeupdate={handle_time_update}
     ></audio>
 
-    <div id="seek-btns" class="mb-8 flex flex-wrap items-center justify-center gap-2">
+    <div id="seek-btns" class="mb-8 font-sans flex flex-wrap items-center justify-center gap-2">
         <div class="control-group mx-2 flex items-center rounded-full bg-white px-3 py-1 shadow">
             <Button
                 class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
@@ -30,8 +30,8 @@
 
             <div id="play-speed" class="mx-3 flex flex-col items-center text-center">
                 <svg
-                    width="30px"
-                    height="30px"
+                    width="25px"
+                    height="25px"
                     viewBox="0 0 48 48"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +87,7 @@
                         stroke-linejoin="round"
                     />
                 </svg>
-                <p class="text-sm font-medium text-black z-50">{playback_rate.toFixed(2)}x</p>
+                <p class="text-sm font-medium text-black">{playback_rate.toFixed(2)}x</p>
             </div>
             <Button
                 class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
@@ -139,15 +139,15 @@
         </div>
     </div>
 
-    <div id="repeat-cont" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div id="repeat-cont" class="font-sans grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div class="spinner-cont control-card rounded-lg bg-white p-4 shadow-sm">
-            <h3 class="mb-4 text-center text-lg font-medium text-gray-700">نطاق التشغيل</h3>
+            <h3 class="mb-4 text-center text-lg font-medium text-gray-700 katab">نطاق التشغيل</h3>
             <div>
                 <div class="mb-5 flex items-center justify-between">
-                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg">من</p>
+                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg katab">من</p>
                     <div class="flex">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Decrease start">–</Button
                         >
                         <input
@@ -161,17 +161,17 @@
                             oninput={handle_input_change}
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Increase start">+</Button
                         >
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg">إلى</p>
+                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg katab">إلى</p>
                     <div class="flex">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Decrease end">–</Button
                         >
                         <input
@@ -185,7 +185,7 @@
                             oninput={handle_input_change}
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Increase end">+</Button
                         >
                     </div>
@@ -194,7 +194,7 @@
         </div>
 
         <div class="spinner-cont control-card rounded-lg bg-white p-4 shadow-sm">
-            <h3 class="mb-4 text-center text-lg font-medium text-gray-700">التكرار</h3>
+            <h3 class="mb-4 text-center text-lg font-medium text-gray-700 katab">التكرار</h3>
             <div>
                 <div class="mb-5 flex items-center">
                     <div class="ml-2 flex items-center">
@@ -213,11 +213,11 @@
                             <path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" />
                             <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3" /></svg
                         >
-                        <span class="text-gray-600 text-sm sm:text-lg">كامل</span>
+                        <span class="text-gray-600 text-sm sm:text-lg katab">كامل</span>
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
@@ -228,7 +228,7 @@
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -252,11 +252,11 @@
                             <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3" />
                             <path d="M11 11l1 -1v4" /></svg
                         >
-                        <span class="text-gray-600 text-sm sm:text-lg">مقطع</span>
+                        <span class="text-gray-600 text-sm sm:text-lg katab">مقطع</span>
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
@@ -267,7 +267,7 @@
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -287,22 +287,22 @@
                         d="M19 22h1v-2h-1v-1a7.014 7.014 0 0 0-3.433-6.02c-.355-.21-.567-.547-.567-.901v-.158c0-.354.212-.691.566-.9A7.016 7.016 0 0 0 19 5V4h1V2H4v2h1v1a7.016 7.016 0 0 0 3.434 6.021c.354.209.566.545.566.9v.158c0 .354-.212.691-.566.9A7.016 7.016 0 0 0 5 19v1H4v2h15zM17 4v1a5.005 5.005 0 0 1-1.004 3H8.004A5.005 5.005 0 0 1 7 5V4h10zM9.45 14.702c.971-.574 1.55-1.554 1.55-2.623V12h2v.079c0 1.068.579 2.049 1.551 2.623A4.98 4.98 0 0 1 16.573 17H7.427a4.977 4.977 0 0 1 2.023-2.298z"
                     ></path></svg
                 >
-                <span class="mr-2">السكت</span>
+                <span class="mr-2 katab">السكت</span>
             </h3>
             <div class="flex items-center justify-center">
                 <Button
-                    class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                    class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                     >–</Button
                 >
                 <input
                     type="text"
-                    class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                    class="spinner mx-2 w-16 rounded-md border-none border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                     id="delay"
                     value="0x"
                     readonly
                 />
                 <Button
-                    class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                    class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                     >+</Button
                 >
             </div>
@@ -498,6 +498,10 @@ function handle_time_update() {
 <style>
 #player-cont {
     font-family: 'Noto';
+}
+
+.katab{
+    font-family: 'Kitab';
 }
 button {
     transition: all 0.2s ease;
