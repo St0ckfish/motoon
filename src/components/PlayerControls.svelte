@@ -147,7 +147,7 @@
                     <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg katab">من</p>
                     <div class="flex">
                         <Button
-                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Decrease start">–</Button
                         >
                         <input
@@ -161,7 +161,7 @@
                             oninput={handle_input_change}
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Increase start">+</Button
                         >
                     </div>
@@ -171,7 +171,7 @@
                     <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg katab">إلى</p>
                     <div class="flex">
                         <Button
-                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Decrease end">–</Button
                         >
                         <input
@@ -185,7 +185,7 @@
                             oninput={handle_input_change}
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Increase end">+</Button
                         >
                     </div>
@@ -217,7 +217,7 @@
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
@@ -228,7 +228,7 @@
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -256,7 +256,7 @@
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
@@ -267,7 +267,7 @@
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -291,7 +291,7 @@
             </h3>
             <div class="flex items-center justify-center">
                 <Button
-                    class="decrease flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                    class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                     >–</Button
                 >
                 <input
@@ -302,7 +302,7 @@
                     readonly
                 />
                 <Button
-                    class="increase flex h-8 w-8 items-center font-semibold text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                    class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
                     >+</Button
                 >
             </div>
@@ -373,33 +373,67 @@ function handle_button_action(e, action) {
     }, 150)
 }
 
-async function setup_button_interactions() {
-    const speed_buttons = document.querySelectorAll('.speed')
-    const skip_buttons = document.querySelectorAll('.skip')
-    const spinner_buttons = document.querySelectorAll('.spinner-cont button')
+function setup_button_interactions() {
+    const speed_buttons = document.querySelectorAll('.speed');
+    const skip_buttons = document.querySelectorAll('.skip');
+    
+    // Make sure we're targeting the correct buttons for increase/decrease
+    const spinner_buttons = document.querySelectorAll('.spinner-cont .increase, .spinner-cont .decrease');
 
     speed_buttons.forEach(btn => {
-        btn.addEventListener('mousedown', e => handle_button_action(e, 'speed'))
-        btn.addEventListener('touchstart', e => handle_button_action(e, 'speed'))
-    })
+        btn.addEventListener('mousedown', e => handle_button_action(e, 'speed'));
+        btn.addEventListener('touchstart', e => handle_button_action(e, 'speed'));
+    });
 
     skip_buttons.forEach(btn => {
-        btn.addEventListener('mousedown', e => handle_button_action(e, 'skip'))
-        btn.addEventListener('touchstart', e => handle_button_action(e, 'skip'))
-    })
+        btn.addEventListener('mousedown', e => handle_button_action(e, 'skip'));
+        btn.addEventListener('touchstart', e => handle_button_action(e, 'skip'));
+    });
 
     spinner_buttons.forEach(btn => {
-        btn.addEventListener('mousedown', e => handle_button_action(e, 'spinner'))
-        btn.addEventListener('touchstart', e => handle_button_action(e, 'spinner'))
-    })
+        // Direct event handling for spinner buttons for reliability
+        btn.addEventListener('mousedown', e => {
+            const isIncrease = btn.classList.contains('increase');
+            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling;
+            
+            // Immediately handle the click
+            handle_rep_change(input, isIncrease);
+            
+            // Set up interval for holding the button
+            if (playback_interval) {
+                clearInterval(playback_interval);
+            }
+            
+            playback_interval = setInterval(() => {
+                handle_rep_change(input, isIncrease);
+            }, 150);
+        });
+        
+        btn.addEventListener('touchstart', e => {
+            const isIncrease = btn.classList.contains('increase');
+            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling;
+            
+            // Immediately handle the tap
+            handle_rep_change(input, isIncrease);
+            
+            // Set up interval for holding the button
+            if (playback_interval) {
+                clearInterval(playback_interval);
+            }
+            
+            playback_interval = setInterval(() => {
+                handle_rep_change(input, isIncrease);
+            }, 150);
+        });
+    });
 
-    document.documentElement.addEventListener('mouseup', clear_action_interval)
-    document.documentElement.addEventListener('touchend', clear_action_interval)
+    document.documentElement.addEventListener('mouseup', clear_action_interval);
+    document.documentElement.addEventListener('touchend', clear_action_interval);
 
-    const number_inputs = document.querySelectorAll('input[type="number"]')
+    const number_inputs = document.querySelectorAll('input[type="number"]');
     number_inputs.forEach(input => {
-        input.addEventListener('keydown', handle_number_input_keydown)
-    })
+        input.addEventListener('keydown', handle_number_input_keydown);
+    });
 }
 
 function clear_action_interval() {
@@ -411,11 +445,14 @@ function clear_action_interval() {
 
 function handle_number_input_keydown(e) {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault()
+        e.preventDefault();
         const target_button =
-            e.key === 'ArrowDown' ? e.target.previousElementSibling : e.target.nextElementSibling
+            e.key === 'ArrowDown' ? e.target.previousElementSibling : e.target.nextElementSibling;
 
-        handle_rep_change(e.target, e.key === 'ArrowUp')
+        handle_rep_change(e.target, e.key === 'ArrowUp');
+    } else if (e.key === '-') {
+        // Prevent entering negative sign
+        e.preventDefault();
     }
 }
 
@@ -443,46 +480,84 @@ function handle_skip(increase) {
 }
 
 function handle_rep_change(el, increase) {
-    if (!el) return
+    if (!el) {
+        return;
+    }
 
-    const id = el.id
-    let val = el.value
+    const id = el.id;
+    let val = el.value;
+    
 
     if (el.type === 'number') {
-        val = +val + (increase ? 1 : -1)
-        if (val > el.max) {
-            val = 1
-        } else if (val === 0) {
-            val = +el.max
+        // Always convert to a number first
+        val = parseInt(val, 10) || 1;
+        val = val + (increase ? 1 : -1);
+        
+        // Set limits - never go below 1
+        if (val < 1) {
+            val = 1;
+        } else if (val > parseInt(el.max, 10)) {
+            val = parseInt(el.max, 10);
         }
     } else if (id.endsWith('-reps')) {
         if (val === '∞') {
-            val = increase ? 1 : 10
+            val = increase ? 1 : 10;
         } else {
-            val = +val + (increase ? 1 : -1)
+            val = parseInt(val, 10) + (increase ? 1 : -1);
         }
         if (val === 0 || val === 11) {
-            val = '∞'
+            val = '∞';
         }
     } else if (id === 'delay') {
-        val = +val.slice(0, -1) + (increase ? 0.5 : -0.5)
+        val = parseFloat(val.slice(0, -1)) + (increase ? 0.5 : -0.5);
         if (val === 2.5) {
-            val = 2
-        } else if (val === -0.5) {
-            val = 0
+            val = 2;
+        } else if (val < 0) {
+            val = 0;
         }
-        val += 'x'
+        val += 'x';
     }
 
-    el.value = val
-    el.classList[el.validity.valid ? 'remove' : 'add']('invalid')
-    save_settings(id, val)
+    // Update the element's value directly
+    el.value = val;
+    console.log(`New value for ${id}: ${val}`);
+    
+    el.classList[el.validity.valid ? 'remove' : 'add']('invalid');
+    save_settings(id, val.toString());
+    
+    // If this is the start input changing, update the current displayed part
+    if (id === 'part-start') {
+        const event = new CustomEvent('start-input-change', {
+            detail: { value: parseInt(val, 10) }
+        });
+        document.dispatchEvent(event);
+    }
 }
 
 function handle_input_change(e) {
-    const el = e.target
-    el.classList.toggle('invalid', !el.validity.valid)
-    save_settings(el.id, el.value)
+    const el = e.target;
+    
+    // Make sure we have a valid number
+    if (el.type === 'number') {
+        let val = parseInt(el.value, 10);
+        
+        // Prevent negative values
+        if (isNaN(val) || val < 1) {
+            val = 1;
+            el.value = val;
+        }
+    }
+    
+    el.classList.toggle('invalid', !el.validity.valid);
+    save_settings(el.id, el.value);
+    
+    // If this is the start input changing, update the current displayed part
+    if (el.id === 'part-start' && parseInt(el.value, 10) > 0) {
+        const event = new CustomEvent('start-input-change', {
+            detail: { value: parseInt(el.value, 10) }
+        });
+        document.dispatchEvent(event);
+    }
 }
 
 onMount(setup_button_interactions)

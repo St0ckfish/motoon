@@ -1,7 +1,7 @@
 <div class="relative mb-6 w-full">
     <select
-        id="matn-select"
-        onchange={handle_change}
+        bind:this={selectElement}
+        on:change={handleChange}
         class="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 text-lg leading-tight shadow hover:border-gray-400 focus:outline-none"
     >
         <optgroup label="متون">
@@ -52,22 +52,34 @@
 
 <script>
 // @ts-nocheck
+
 import {createEventDispatcher, onMount} from 'svelte'
 
 const dispatch = createEventDispatcher()
+let selectElement
 
-onMount(async () => {
-    const select = document.querySelector('#matn-select')
-    if (select && select.options.length > 0) {
-        if (select.selectedOptions && select.selectedOptions.length > 0) {
+onMount(() => {
+    // Check hash for initial selection
+    const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
+    
+    if (selectElement) {
+        if (hash) {
+            const options = Array.from(selectElement.options)
+            const matchedOption = options.find(option => option.value === hash)
+            if (matchedOption) {
+                selectElement.value = hash
+            }
+        }
+        
+        if (selectElement.selectedOptions && selectElement.selectedOptions.length > 0) {
             dispatch('change', {
-                target: select,
+                target: selectElement,
             })
         }
     }
 })
 
-function handle_change(e) {
+function handleChange(e) {
     if (e.target && e.target.selectedOptions && e.target.selectedOptions.length > 0) {
         dispatch('change', e)
     }

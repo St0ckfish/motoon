@@ -6,7 +6,7 @@
         مُقرِئ المتون
     </h1>
 
-    <MatnSelector on:change={handle_matn_change} />
+    <MatnSelector on:change={handleMatnChange} />
 
     <TextDisplay bind:text_container_el bind:tpl_cont_el bind:part_progress_el />
 
@@ -36,6 +36,7 @@ let state = $state({
     cur: 0,
     segs: [],
     title: [],
+    isFirstPlay: true,
 })
 
 let settings = $state(JSON.parse(localStorage.getItem('settings') || '{}'))
@@ -52,68 +53,74 @@ let tpl_cont_el
 onMount(() => {
     clicker = new Audio('click.mp3')
 
-    const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
-
-    const initial_matn = document.querySelector('#matn-select')
-    if (initial_matn) {
-        if (
-            hash &&
-            Array.from(initial_matn.options)
-                .map(o => o.value)
-                .includes(hash)
-        ) {
-            initial_matn.value = hash
-        }
-        if (initial_matn.selectedOptions && initial_matn.selectedOptions.length > 0) {
-            load_matn(initial_matn.selectedOptions[0].text, initial_matn.value)
-        }
-    }
-
     document.addEventListener('timeupdate', e => {
         if (e.detail) {
-            handle_time_update(e.detail)
+            handleTimeUpdate(e.detail)
         }
     })
-})
 
-onDestroy(() => {
-    if (audio) {
-        audio.pause()
+    document.addEventListener('start-input-change', e => {
+        if (e.detail && e.detail.value) {
+            state.cur = e.detail.value - 1
+            state.part_reps = 1
+
+            loadPart()
+
+            if (audio && !audio.paused && state.segs && state.segs[state.cur]) {
+                audio.currentTime = state.segs[state.cur][0]
+            }
+        }
+    })
+
+    const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
+    if (hash) {
+        const select = document.querySelector('select')
+        if (select) {
+            const option = Array.from(select.options).find(opt => opt.value === hash)
+            if (option) {
+                load_matn(option.text, hash)
+            }
+        }
     }
-    document.removeEventListener('timeupdate', handle_time_update)
 })
 
-function save_settings(id, value) {
-    const element = document.querySelector(`#${id}`)
-    if (!element || !element.validity.valid) return
-
-    settings = {...settings, [id]: value}
-    // localStorage.setItem('settings', JSON.stringify(settings));
-}
-
-async function load_matn(matn_name, matn_id) {
-    if (!part_start_input) part_start_input = document.querySelector('#part-start')
-    if (!part_end_input) part_end_input = document.querySelector('#part-end')
-    const encodedMatnId = encodeURIComponent(matn_id);
+async function load_matn(matnName, matnId) {
+    const encodedMatnId = encodeURIComponent(matnId)
     try {
         const response = await fetch(`/data/${encodedMatnId}.txt`, {cache: 'no-cache'})
+        if (!response.ok) {
+            if (tpl_cont_el) {
+                tpl_cont_el.innerHTML = renderTitle(
+                    'خطأ في تحميل المتن',
+                    `فشل في تحميل الملف (${response.status})`,
+                )
+            }
+            return
+        }
+
         const text = await response.text()
 
         if (!text || text.trim() === '') {
+            if (tpl_cont_el) {
+                tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', 'ملف فارغ')
+            }
             return
         }
 
         const lines = text.split('\n')
 
         if (lines.length < 2) {
+            if (tpl_cont_el) {
+                tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', 'عدد سطور غير كافٍ')
+            }
             return
         }
 
-        const audio_url = lines[0].trim()
+        const audioUrl = lines[0].trim()
 
         const segments = []
-        let current_title = matn_name
-        let current_description = ''
+        let currentTitle = matnName
+        let currentDescription = ''
 
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim()
@@ -141,8 +148,8 @@ async function load_matn(matn_name, matn_id) {
                     })
 
                     if (timing === 0) {
-                        current_title = text
-                        current_description = description.trim()
+                        currentTitle = text
+                        currentDescription = description.trim()
                     }
 
                     i = j - 1
@@ -151,27 +158,36 @@ async function load_matn(matn_name, matn_id) {
         }
 
         if (segments.length === 0) {
+            if (tpl_cont_el) {
+                tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', 'لم يتم العثور على مقاطع')
+            }
             return
         }
 
-        const old_playback_rate = audio ? audio.playbackRate : 1
+        const oldPlaybackRate = audio ? audio.playbackRate : 1
 
         if (!audio) {
             audio = document.querySelector('audio')
             if (!audio) {
+                if (tpl_cont_el) {
+                    tpl_cont_el.innerHTML = renderTitle(
+                        'خطأ في تحميل المتن',
+                        'لم يتم العثور على عنصر الصوت',
+                    )
+                }
                 return
             }
         }
 
-        audio.src = audio_url
-        audio.playbackRate = old_playback_rate
+        audio.src = audioUrl
+        audio.playbackRate = oldPlaybackRate
 
-        state.title = current_title
+        state.title = currentTitle
         state.segs = segments.map(seg => {
             let text = seg.text
             if (text && !text.includes('=') && (text.includes('،') || text.includes('؛'))) {
-                const split_char = text.includes('،') ? '،' : '؛'
-                const idx = text.indexOf(split_char)
+                const splitChar = text.includes('،') ? '،' : '؛'
+                const idx = text.indexOf(splitChar)
                 if (idx > 0) {
                     text = text.substring(0, idx + 1) + '=' + text.substring(idx + 1)
                 }
@@ -179,50 +195,47 @@ async function load_matn(matn_name, matn_id) {
             return [seg.timing, text, seg.description]
         })
 
-        location.hash = matn_id.replaceAll(' ', '-')
-        document.title = `${matn_name} | مقرئ المتون`
+        location.hash = matnId.replaceAll(' ', '-')
+        document.title = `${matnName} | مقرئ المتون`
 
         if (part_start_input && part_end_input) {
             part_start_input.value = 1
-            const max_value = state.segs.length
-            part_end_input.value = max_value
-            part_start_input.max = max_value
-            part_end_input.max = max_value
+            const maxValue = state.segs.length
+            part_start_input.max = maxValue
+            part_end_input.max = maxValue
+            part_end_input.value = maxValue
+            part_start_input.min = 1
+            part_end_input.min = 1
 
-            reset_state()
+            save_settings('part-start', 1)
+            save_settings('part-end', maxValue)
+
+            resetState()
         } else {
-            setTimeout(() => {
-                part_start_input = document.querySelector('#part-start')
-                part_end_input = document.querySelector('#part-end')
-
-                if (part_start_input && part_end_input) {
-                    part_start_input.value = 1
-                    const max_value = state.segs.length
-                    part_end_input.value = max_value
-                    part_start_input.max = max_value
-                    part_end_input.max = max_value
-                    reset_state()
-                }
-            }, 500)
+            resetState()
         }
-    } catch (error) {
+    } catch {
         if (tpl_cont_el) {
-            tpl_cont_el.innerHTML = render_title(
-                'خطأ في تحميل المتن',
-                'يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى',
-            )
+            tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', `${error.message}`)
         }
     }
 }
 
-function load_part() {
-    if (!text_container_el || !tpl_cont_el) {
-        text_container_el = document.querySelector('#text')
-        tpl_cont_el = document.querySelector('#tpl-cont')
+onDestroy(() => {
+    if (audio) {
+        audio.pause()
+    }
+    document.removeEventListener('timeupdate', handleTimeUpdate)
+})
 
-        if (!text_container_el || !tpl_cont_el) {
-            return
-        }
+function save_settings(id, value) {
+    settings = {...settings, [id]: value}
+    // localStorage.setItem('settings', JSON.stringify(settings));
+}
+
+function loadPart() {
+    if (!text_container_el || !tpl_cont_el) {
+        return
     }
 
     if (!state.segs || state.segs.length === 0) {
@@ -239,36 +252,36 @@ function load_part() {
     setTimeout(() => {
         try {
             if (state.cur === 0) {
-                let title_text = typeof state.title === 'string' ? state.title : cur[1]
-                let desc_text = cur[2] || ''
-                tpl_cont_el.innerHTML = render_title(title_text, desc_text)
+                let titleText = typeof state.title === 'string' ? state.title : cur[1]
+                let descText = cur[2] || ''
+                tpl_cont_el.innerHTML = renderTitle(titleText, descText)
             } else if (cur[1] && cur[1].includes('=')) {
                 const parts = cur[1].split('=')
-                tpl_cont_el.innerHTML = render_bayt(parts, cur[2] || '')
+                tpl_cont_el.innerHTML = renderBayt(parts, cur[2] || '')
             } else if (cur[1] && (cur[1].includes('،') || cur[1].includes('؛'))) {
-                const split_char = cur[1].includes('،') ? '،' : '؛'
-                const split_index = cur[1].indexOf(split_char)
+                const splitChar = cur[1].includes('،') ? '،' : '؛'
+                const splitIndex = cur[1].indexOf(splitChar)
 
-                if (split_index > 0) {
+                if (splitIndex > 0) {
                     const parts = [
-                        cur[1].substring(0, split_index + 1),
-                        cur[1].substring(split_index + 1),
+                        cur[1].substring(0, splitIndex + 1),
+                        cur[1].substring(splitIndex + 1),
                     ]
-                    tpl_cont_el.innerHTML = render_bayt(parts, cur[2] || '')
+                    tpl_cont_el.innerHTML = renderBayt(parts, cur[2] || '')
                 } else {
-                    tpl_cont_el.innerHTML = render_title(cur[1], cur[2] || '')
+                    tpl_cont_el.innerHTML = renderTitle(cur[1], cur[2] || '')
                 }
             } else {
                 if (cur[1]) {
-                    tpl_cont_el.innerHTML = render_title(cur[1], cur[2] || '')
+                    tpl_cont_el.innerHTML = renderTitle(cur[1], cur[2] || '')
                 } else {
-                    tpl_cont_el.innerHTML = render_title('جزء فارغ', '')
+                    tpl_cont_el.innerHTML = renderTitle('جزء فارغ', '')
                 }
             }
 
             text_container_el.style.opacity = 1
         } catch {
-            tpl_cont_el.innerHTML = render_title('خطأ في عرض المحتوى', 'يرجى المحاولة مرة أخرى')
+            tpl_cont_el.innerHTML = renderTitle('خطأ في عرض المحتوى', 'يرجى المحاولة مرة أخرى')
             text_container_el.style.opacity = 1
         }
     }, 250)
@@ -278,11 +291,11 @@ function load_part() {
     }
 }
 
-function render_title(title, desc) {
+function renderTitle(title, desc) {
     return `<div class="title">${title}</div><div class="desc">${desc}</div>`
 }
 
-function render_bayt(b, sharh) {
+function renderBayt(b, sharh) {
     if (!Array.isArray(b)) {
         if (typeof b === 'string') {
             b = b.split('=')
@@ -309,93 +322,118 @@ function render_bayt(b, sharh) {
 
     return `
       <div class="matn">
-        <div id="part-no" style="font-size: 2rem;" class="[text-shadow:_0_4px_4px_rgb(0_0_0_/_0.5)] -translate-y-7">${ar_nums(state.cur)}</div>
+        <div id="part-no" style="font-size: 2rem;" class="[text-shadow:_0_4px_4px_rgb(0_0_0_/_0.5)] -translate-y-7">${arNums(state.cur)}</div>
         <div class="first">${first}</div>
         <div class="second">${second}</div>
       </div>
       <div class="sharh">${sharh || ''}</div>`
 }
 
-function ar_nums(s) {
+function arNums(s) {
     return ('' + s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'.substr(+d, 1))
 }
 
-function part_done() {
+function partDone() {
     if (!audio) return
 
     if (!state.segs || state.segs.length === 0) return
 
-    if (!part_start_input) part_start_input = document.querySelector('#part-start')
+    const delayInput = document.getElementById('delay')
+    const partRepsInput = document.getElementById('part-reps')
+    const allRepsInput = document.getElementById('all-reps')
+    const partStartInput = part_start_input
+    const partEndInput = part_end_input
 
-    const delay = document.querySelector('#delay')
-    const part_reps = document.querySelector('#part-reps')
-    const part_end = document.querySelector('#part-end')
-    const all_reps = document.querySelector('#all-reps')
-
-    if (!delay || !part_reps || !part_end || !all_reps) {
-        return
+    if (
+        state.cur === 0 &&
+        partEndInput?.value === '1' &&
+        state.segs.length > 1 &&
+        state.isFirstPlay
+    ) {
+        partEndInput.value = state.segs.length
+        state.isFirstPlay = false
     }
 
-    let last_dur =
+    const delayValue = delayInput?.value || '0x'
+    const partRepsValue = partRepsInput?.value || '1'
+    const partEndValue = partEndInput?.value || String(state.segs.length)
+    const allRepsValue = allRepsInput?.value || '1'
+
+    let lastDur =
         state.cur + 1 < state.segs.length
             ? state.segs[state.cur + 1][0] - state.segs[state.cur][0]
             : 5
 
-    let delay_time = +delay.value.slice(0, -1) * last_dur * 1000
-    let part_reps_val = +part_reps.value
-    let part_end_val = +part_end.value
+    let delayTime = +delayValue.slice(0, -1) * lastDur * 1000
+    let partRepsVal = +partRepsValue
+    let partEndVal = +partEndValue
 
-    if (
-        state.cur + 1 === part_end_val &&
-        state.all_reps === +all_reps.value &&
-        state.part_reps === part_reps_val
-    ) {
+    const isAtLastPart = state.cur + 1 >= partEndVal
+    const hasCompletedPartReps = state.part_reps >= partRepsVal
+    const hasCompletedAllReps = state.all_reps >= +allRepsValue
+    const shouldResetState = isAtLastPart && hasCompletedPartReps && hasCompletedAllReps
+
+    if (shouldResetState) {
         audio.pause()
-        reset_state()
+        resetState()
         return
     }
 
-    if (state.part_reps === part_reps_val) {
-        state.part_reps = 0
+    if (state.part_reps >= partRepsVal) {
+        state.part_reps = 1
         state.cur++
+    } else {
+        state.part_reps++
     }
 
-    state.part_reps++
-
-    if (state.cur + 1 > part_end_val) {
+    if (state.cur + 1 > partEndVal) {
         audio.pause()
         state.cur = part_start_input ? +part_start_input.value - 1 : 0
         state.all_reps++
+
         if (clicker) {
             clicker.volume = 0.75
             clicker.play()
         }
-        delay_time = delay_time || 750
+
+        delayTime = delayTime || 750
     }
 
-    if (delay_time) {
+    if (delayTime) {
         audio.pause()
     }
 
     setTimeout(() => {
-        load_part()
+        loadPart()
         if (audio && audio.paused) {
-            audio.play()
+            const playPromise = audio.play()
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    document.addEventListener(
+                        'click',
+                        function resumeAudio() {
+                            audio.play()
+                            document.removeEventListener('click', resumeAudio)
+                        },
+                        {once: true},
+                    )
+                })
+            }
         }
-    }, delay_time)
+    }, delayTime || 0)
 }
 
-function reset_state() {
-    if (!part_progress_el) {
-        part_progress_el = document.querySelector('#part-progress')
-    }
-
+function resetState() {
     if (!state.segs || state.segs.length === 0) {
         return
     }
 
+    if (!part_progress_el) {
+        part_progress_el = document.querySelector('[id^="part-progress"]')
+    }
+
     if (part_progress_el) {
-        part_progress_el.style.width = 0
+        part_progress_el.style.width = '0'
     }
 
     state.all_reps = 1
@@ -407,13 +445,11 @@ function reset_state() {
         audio.pause()
     }
 
-    load_part()
+    loadPart()
 }
 
 function seek(dir) {
-    if (!audio) return
-
-    if (!state.segs || state.segs.length === 0) return
+    if (!audio || !state.segs || state.segs.length === 0) return
 
     audio.pause()
 
@@ -430,61 +466,59 @@ function seek(dir) {
 
     audio.currentTime = state.segs[state.cur][0]
 
-    load_part()
+    loadPart()
     audio.play()
 }
 
-function handle_time_update(audio_el) {
-    if (!audio_el || audio_el.paused) return
+function handleTimeUpdate(audioEl) {
+    if (!audioEl || audioEl.paused) return
 
     if (!part_progress_el) {
-        part_progress_el = document.querySelector('#part-progress')
-        if (!part_progress_el) return
+        return
     }
 
     if (!state.segs || state.segs.length === 0 || !state.segs[state.cur]) return
 
-    let cur_time = audio_el.currentTime
-    let part_time = state.segs[state.cur][0]
-    let next_time =
-        state.cur < state.segs.length - 1 ? state.segs[state.cur + 1][0] : audio_el.duration
+    let curTime = audioEl.currentTime
+    let partTime = state.segs[state.cur][0]
+    let nextTime =
+        state.cur < state.segs.length - 1 ? state.segs[state.cur + 1][0] : audioEl.duration
 
-    if (state.cur > 0 && cur_time < part_time) {
+    if (state.cur > 0 && curTime < partTime) {
         seek(-1)
         return
     }
 
-    if (state.cur < state.segs.length - 2 && cur_time > state.segs[state.cur + 2][0]) {
+    if (state.cur < state.segs.length - 2 && curTime > state.segs[state.cur + 2][0]) {
         seek(1)
         return
     }
 
-    if (state.cur === 0 && cur_time < part_time && cur_time >= part_time - 0.35) {
-        load_part()
+    if (state.cur === 0 && curTime < partTime && curTime >= partTime - 0.35) {
+        loadPart()
     }
 
-    if (cur_time >= next_time) {
-        part_done()
+    if (curTime >= nextTime) {
+        const partEndValue = part_end_input?.value || String(state.segs.length)
+        partDone()
     }
 
-    const progress_percentage = ((cur_time - part_time) / (next_time - part_time)) * 100
-    if (!isNaN(progress_percentage) && isFinite(progress_percentage)) {
-        part_progress_el.style.width = Math.min(100, Math.max(0, progress_percentage)) + '%'
+    const progressPercentage = ((curTime - partTime) / (nextTime - partTime)) * 100
+    if (!isNaN(progressPercentage) && isFinite(progressPercentage)) {
+        part_progress_el.style.width = Math.min(100, Math.max(0, progressPercentage)) + '%'
     } else {
         part_progress_el.style.width = '0%'
     }
 }
 
-function handle_matn_change() {
-    const select = document.querySelector('#matn-select')
+function handleMatnChange(event) {
+    const select = event.detail?.target || event.target
     if (!select) {
         return
     }
-
-    const selected_value = select.value
-    const selected_text = select.options[select.selectedIndex].text
-
-    load_matn(selected_text, selected_value)
+    const selectedValue = select.value
+    const selectedText = select.options[select.selectedIndex].text
+    load_matn(selectedText, selectedValue)
 }
 </script>
 

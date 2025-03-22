@@ -12,7 +12,21 @@
 </div>
 
 <script>
-let {text_container_el, tpl_cont_el, part_progress_el} = $props()
+import {onMount} from 'svelte'
+
+let text_container_el
+let tpl_cont_el
+let part_progress_el
+
+// نصدر هذه المتغيرات لتكون متاحة للمكون الأب
+export {text_container_el, tpl_cont_el, part_progress_el}
+
+onMount(() => {
+    console.log('TextDisplay mounted')
+    console.log('text_container_el:', text_container_el)
+    console.log('tpl_cont_el:', tpl_cont_el)
+    console.log('part_progress_el:', part_progress_el)
+})
 </script>
 
 <style>
