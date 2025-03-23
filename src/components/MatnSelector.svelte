@@ -1,83 +1,111 @@
-<div class="relative mx-auto mb-6 max-w-10/12">
-    <select
-        bind:this={select_element}
-        onchange={handle_change}
-        class="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 text-lg leading-tight shadow hover:border-gray-400 focus:outline-none"
-    >
-        <optgroup label="متون">
-            <option value="الأرجوزة الميئية">الأرجوزة الميئية</option>
-            <option value="الجزرية">الجزرية</option>
-            <option value="تحفة الأطفال">تحفة الأطفال</option>
-            <option value="نظم الآجرومية">نظم الآجرومية</option>
-            <option value="نظم الورقات">نظم الورقات</option>
-            <option value="الرحبية">الرحبية</option>
-            <option value="نظم المقصود">نظم المقصود</option>
-            <option value="مائة المعاني والبيان">مائة المعاني والبيان</option>
-        </optgroup>
-        <optgroup label="المعلقات">
-            <option value="معلقة امرئ القيس">معلقة امرئ القيس</option>
-            <option value="معلقة طرفة">معلقة طرفة</option>
-            <option value="معلقة زهير">معلقة زهير</option>
-            <option value="معلقة عمرو بن كلثوم">معلقة عمرو بن كلثوم</option>
-            <option value="معلقة عنترة">معلقة عنترة</option>
-            <option value="معلقة لبيد">معلقة لبيد</option>
-            <option value="معلقة الحارث">معلقة الحارث</option>
-            <option value="معلقة الأعشى">معلقة الأعشى</option>
-            <option value="معلقة النابغة">معلقة النابغة</option>
-            <option value="معلقة عبيد بن الأبرص">معلقة عبيد بن الأبرص</option>
-        </optgroup>
-        <optgroup label="عيون الشعر">
-            <option value="لامية العرب">لامية العرب</option>
-            <option value="البردة">البردة</option>
-        </optgroup>
-    </select>
-    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-2 text-gray-700">
-        <svg
-            class="h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-            />
-        </svg>
-    </div>
-</div>
-
 <script>
-import {onMount} from 'svelte'
-
-let {change} = $props()
-let select_element = $state()
-
-onMount(() => {
-    const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
-
-    if (select_element) {
-        if (hash) {
-            const options = Array.from(select_element.options)
-            const matched_option = options.find(option => option.value === hash)
-            if (matched_option) {
-                select_element.value = hash
-            }
+    import { onMount } from 'svelte';
+    import { ChevronUp, ChevronDown } from 'lucide-svelte';
+    import * as Select from "$lib/components/ui/select";
+  
+    let { change } = $props();
+    let currentValue = $state("");
+    let selectContent;
+  
+    onMount(() => {
+      const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ');
+  
+      if (hash) {
+        currentValue = hash;
+      }
+  
+      if (currentValue) {
+        change({
+          target: {
+            value: currentValue,
+            selectedOptions: [{ text: currentValue }]
+          }
+        });
+      }
+    });
+  
+    function handleValueChange(value) {
+      currentValue = value;
+      change({
+        target: {
+          value,
+          selectedOptions: [{ text: value }]
         }
-
-        if (select_element.selectedOptions && select_element.selectedOptions.length > 0) {
-            change({
-                target: select_element,
-            })
-        }
+      });
     }
-})
-
-function handle_change(e) {
-    if (e.target && e.target.selectedOptions && e.target.selectedOptions.length > 0) {
-        change(e)
+  
+    function scrollUp() {
+      if (selectContent) {
+        selectContent.scrollTop -= 100;
+      }
     }
-}
-</script>
+  
+    function scrollDown() {
+      if (selectContent) {
+        selectContent.scrollTop += 100;
+      }
+    }
+  </script>
+  
+  <div class="relative mx-auto mb-6 max-w-10/12">
+    <div class="flex">
+      <Select.Root value={currentValue} onValueChange={handleValueChange}>
+        <Select.Trigger class="w-full border border-gray-300 rounded text-lg">
+          yyuyu
+        </Select.Trigger>
+        
+        <Select.Content bind:element={selectContent} class="max-h-60 overflow-y-auto" portalProps={{}}>
+          <div class="sticky top-0 flex justify-center bg-white border-b border-gray-200 z-10">
+            <button 
+              on:click|stopPropagation={scrollUp} 
+              class="w-full py-1 hover:bg-gray-100 flex justify-center items-center text-gray-700"
+            >
+              <ChevronUp class="h-4 w-4" />
+            </button>
+          </div>
+          
+          <Select.Group>
+            <div class="px-2 py-1 text-sm font-medium text-gray-500">متون</div>
+            <Select.Item value="الأرجوزة الميئية" class="cursor-pointer" label="الأرجوزة الميئية">الأرجوزة الميئية</Select.Item>
+            <Select.Item value="الجزرية" class="cursor-pointer" label="الجزرية">الجزرية</Select.Item>
+            <Select.Item value="تحفة الأطفال" class="cursor-pointer" label="تحفة الأطفال">تحفة الأطفال</Select.Item>
+            <Select.Item value="نظم الآجرومية" class="cursor-pointer" label="نظم الآجرومية">نظم الآجرومية</Select.Item>
+            <Select.Item value="نظم الورقات" class="cursor-pointer" label="نظم الورقات">نظم الورقات</Select.Item>
+            <Select.Item value="الرحبية" class="cursor-pointer" label="الرحبية">الرحبية</Select.Item>
+            <Select.Item value="نظم المقصود" class="cursor-pointer" label="نظم المقصود">نظم المقصود</Select.Item>
+            <Select.Item value="نظم نخبة الفكر" class="cursor-pointer" label="نظم نخبة الفكر">نظم نخبة الفكر</Select.Item>
+            <Select.Item value="مائة المعاني والبيان" class="cursor-pointer" label="مائة المعاني والبيان">مائة المعاني والبيان</Select.Item>
+          </Select.Group>
+          
+          <Select.Group>
+            <div class="px-2 py-1 text-sm font-medium text-gray-500">المعلقات</div>
+            <Select.Item value="معلقة امرئ القيس" class="cursor-pointer" label="معلقة امرئ القيس">معلقة امرئ القيس</Select.Item>
+            <Select.Item value="معلقة طرفة" class="cursor-pointer" label="معلقة طرفة">معلقة طرفة</Select.Item>
+            <Select.Item value="معلقة زهير" class="cursor-pointer" label="معلقة زهير">معلقة زهير</Select.Item>
+            <Select.Item value="معلقة عمرو بن كلثوم" class="cursor-pointer" label="معلقة عمرو بن كلثوم">معلقة عمرو بن كلثوم</Select.Item>
+            <Select.Item value="معلقة عنترة" class="cursor-pointer" label="معلقة عنترة">معلقة عنترة</Select.Item>
+            <Select.Item value="معلقة لبيد" class="cursor-pointer" label="معلقة لبيد">معلقة لبيد</Select.Item>
+            <Select.Item value="معلقة الحارث" class="cursor-pointer" label="معلقة الحارث">معلقة الحارث</Select.Item>
+            <Select.Item value="معلقة الأعشى" class="cursor-pointer" label="معلقة الأعشى">معلقة الأعشى</Select.Item>
+            <Select.Item value="معلقة النابغة" class="cursor-pointer" label="معلقة النابغة">معلقة النابغة</Select.Item>
+            <Select.Item value="معلقة عبيد بن الأبرص" class="cursor-pointer" label="معلقة عبيد بن الأبرص">معلقة عبيد بن الأبرص</Select.Item>
+          </Select.Group>
+          
+          <Select.Group>
+            <div class="px-2 py-1 text-sm font-medium text-gray-500">عيون الشعر</div>
+            <Select.Item value="لامية العرب" class="cursor-pointer" label="لامية العرب">لامية العرب</Select.Item>
+            <Select.Item value="البردة" class="cursor-pointer" label="البردة">البردة</Select.Item>
+          </Select.Group>
+          
+          <div class="sticky bottom-0 flex justify-center bg-white border-t border-gray-200 z-10">
+            <button 
+              on:click|stopPropagation={scrollDown} 
+              class="w-full py-1 hover:bg-gray-100 flex justify-center items-center text-gray-700"
+            >
+              <ChevronDown class="h-4 w-4" />
+            </button>
+          </div>
+        </Select.Content>
+      </Select.Root>
+    </div>
+  </div>
