@@ -6,7 +6,7 @@
         مُقرِئ المتون
     </h1>
 
-    <MatnSelector on:change={handleMatnChange} />
+    <MatnSelector change={handle_matn_change} />
 
     <TextDisplay bind:text_container_el bind:tpl_cont_el bind:part_progress_el />
 
@@ -22,7 +22,6 @@
 </main>
 
 <script>
-// @ts-nocheck
 import {onDestroy, onMount} from 'svelte'
 
 import Footer from '../components/Footer.svelte'
@@ -55,7 +54,7 @@ onMount(() => {
 
     document.addEventListener('timeupdate', e => {
         if (e.detail) {
-            handleTimeUpdate(e.detail)
+            handle_time_update(e.detail)
         }
     })
 
@@ -64,9 +63,9 @@ onMount(() => {
             state.cur = e.detail.value - 1
             state.part_reps = 1
 
-            loadPart()
+            load_part()
 
-            if (audio && !audio.paused && state.segs && state.segs[state.cur]) {
+            if (audio && state.segs && state.segs[state.cur]) {
                 audio.currentTime = state.segs[state.cur][0]
             }
         }
@@ -85,12 +84,12 @@ onMount(() => {
 })
 
 async function load_matn(matnName, matnId) {
-    const encodedMatnId = encodeURIComponent(matnId)
+    const encoded_matnId = encodeURIComponent(matnId)
     try {
-        const response = await fetch(`/data/${encodedMatnId}.txt`, {cache: 'no-cache'})
+        const response = await fetch(`/data/${encoded_matnId}.txt`, {cache: 'no-cache'})
         if (!response.ok) {
             if (tpl_cont_el) {
-                tpl_cont_el.innerHTML = renderTitle(
+                tpl_cont_el.innerHTML = render_title(
                     'خطأ في تحميل المتن',
                     `فشل في تحميل الملف (${response.status})`,
                 )
@@ -102,7 +101,7 @@ async function load_matn(matnName, matnId) {
 
         if (!text || text.trim() === '') {
             if (tpl_cont_el) {
-                tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', 'ملف فارغ')
+                tpl_cont_el.innerHTML = render_title('خطأ في تحميل المتن', 'ملف فارغ')
             }
             return
         }
@@ -111,16 +110,14 @@ async function load_matn(matnName, matnId) {
 
         if (lines.length < 2) {
             if (tpl_cont_el) {
-                tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', 'عدد سطور غير كافٍ')
+                tpl_cont_el.innerHTML = render_title('خطأ في تحميل المتن', 'عدد سطور غير كافٍ')
             }
             return
         }
 
         const audioUrl = lines[0].trim()
-
         const segments = []
         let currentTitle = matnName
-        let currentDescription = ''
 
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim()
@@ -149,7 +146,6 @@ async function load_matn(matnName, matnId) {
 
                     if (timing === 0) {
                         currentTitle = text
-                        currentDescription = description.trim()
                     }
 
                     i = j - 1
@@ -159,7 +155,10 @@ async function load_matn(matnName, matnId) {
 
         if (segments.length === 0) {
             if (tpl_cont_el) {
-                tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', 'لم يتم العثور على مقاطع')
+                tpl_cont_el.innerHTML = render_title(
+                    'خطأ في تحميل المتن',
+                    'لم يتم العثور على مقاطع',
+                )
             }
             return
         }
@@ -170,7 +169,7 @@ async function load_matn(matnName, matnId) {
             audio = document.querySelector('audio')
             if (!audio) {
                 if (tpl_cont_el) {
-                    tpl_cont_el.innerHTML = renderTitle(
+                    tpl_cont_el.innerHTML = render_title(
                         'خطأ في تحميل المتن',
                         'لم يتم العثور على عنصر الصوت',
                     )
@@ -186,8 +185,8 @@ async function load_matn(matnName, matnId) {
         state.segs = segments.map(seg => {
             let text = seg.text
             if (text && !text.includes('=') && (text.includes('،') || text.includes('؛'))) {
-                const splitChar = text.includes('،') ? '،' : '؛'
-                const idx = text.indexOf(splitChar)
+                const split_char = text.includes('،') ? '،' : '؛'
+                const idx = text.indexOf(split_char)
                 if (idx > 0) {
                     text = text.substring(0, idx + 1) + '=' + text.substring(idx + 1)
                 }
@@ -198,9 +197,16 @@ async function load_matn(matnName, matnId) {
         location.hash = matnId.replaceAll(' ', '-')
         document.title = `${matnName} | مقرئ المتون`
 
+        const total_verses =
+            state.segs.length > 0 && state.segs[0][1] === currentTitle
+                ? state.segs.length - 1
+                : state.segs.length
+
+        dispatch_verses_loaded_event(total_verses)
+
         if (part_start_input && part_end_input) {
             part_start_input.value = 1
-            const maxValue = state.segs.length
+            const maxValue = total_verses
             part_start_input.max = maxValue
             part_end_input.max = maxValue
             part_end_input.value = maxValue
@@ -210,30 +216,37 @@ async function load_matn(matnName, matnId) {
             save_settings('part-start', 1)
             save_settings('part-end', maxValue)
 
-            resetState()
+            reset_state()
         } else {
-            resetState()
+            reset_state()
         }
-    } catch {
+    } catch (error) {
         if (tpl_cont_el) {
-            tpl_cont_el.innerHTML = renderTitle('خطأ في تحميل المتن', `${error.message}`)
+            tpl_cont_el.innerHTML = render_title('خطأ في تحميل المتن', `${error.message}`)
         }
     }
+}
+
+function dispatch_verses_loaded_event(total) {
+    const event = new CustomEvent('verses-loaded', {
+        detail: {total: total},
+    })
+    document.dispatchEvent(event)
 }
 
 onDestroy(() => {
     if (audio) {
         audio.pause()
     }
-    document.removeEventListener('timeupdate', handleTimeUpdate)
+    document.removeEventListener('timeupdate', handle_time_update)
 })
 
 function save_settings(id, value) {
     settings = {...settings, [id]: value}
-    // localStorage.setItem('settings', JSON.stringify(settings));
+    // localStorage.setItem('settings', JSON.stringify(settings))
 }
 
-function loadPart() {
+function load_part() {
     if (!text_container_el || !tpl_cont_el) {
         return
     }
@@ -254,34 +267,32 @@ function loadPart() {
             if (state.cur === 0) {
                 let titleText = typeof state.title === 'string' ? state.title : cur[1]
                 let descText = cur[2] || ''
-                tpl_cont_el.innerHTML = renderTitle(titleText, descText)
+                tpl_cont_el.innerHTML = render_title(titleText, descText)
             } else if (cur[1] && cur[1].includes('=')) {
                 const parts = cur[1].split('=')
-                tpl_cont_el.innerHTML = renderBayt(parts, cur[2] || '')
+                tpl_cont_el.innerHTML = render_bayt(parts, cur[2] || '')
             } else if (cur[1] && (cur[1].includes('،') || cur[1].includes('؛'))) {
-                const splitChar = cur[1].includes('،') ? '،' : '؛'
-                const splitIndex = cur[1].indexOf(splitChar)
+                const split_char = cur[1].includes('،') ? '،' : '؛'
+                const split_index = cur[1].indexOf(split_char)
 
-                if (splitIndex > 0) {
+                if (split_index > 0) {
                     const parts = [
-                        cur[1].substring(0, splitIndex + 1),
-                        cur[1].substring(splitIndex + 1),
+                        cur[1].substring(0, split_index + 1),
+                        cur[1].substring(split_index + 1),
                     ]
-                    tpl_cont_el.innerHTML = renderBayt(parts, cur[2] || '')
+                    tpl_cont_el.innerHTML = render_bayt(parts, cur[2] || '')
                 } else {
-                    tpl_cont_el.innerHTML = renderTitle(cur[1], cur[2] || '')
+                    tpl_cont_el.innerHTML = render_title(cur[1], cur[2] || '')
                 }
             } else {
                 if (cur[1]) {
-                    tpl_cont_el.innerHTML = renderTitle(cur[1], cur[2] || '')
-                } else {
-                    tpl_cont_el.innerHTML = renderTitle('جزء فارغ', '')
+                    tpl_cont_el.innerHTML = render_title(cur[1], cur[2] || '')
                 }
             }
 
             text_container_el.style.opacity = 1
         } catch {
-            tpl_cont_el.innerHTML = renderTitle('خطأ في عرض المحتوى', 'يرجى المحاولة مرة أخرى')
+            tpl_cont_el.innerHTML = render_title('خطأ في عرض المحتوى', 'يرجى المحاولة مرة أخرى')
             text_container_el.style.opacity = 1
         }
     }, 250)
@@ -291,11 +302,11 @@ function loadPart() {
     }
 }
 
-function renderTitle(title, desc) {
+function render_title(title, desc) {
     return `<div class="title">${title}</div><div class="desc">${desc}</div>`
 }
 
-function renderBayt(b, sharh) {
+function render_bayt(b, sharh) {
     if (!Array.isArray(b)) {
         if (typeof b === 'string') {
             b = b.split('=')
@@ -322,18 +333,18 @@ function renderBayt(b, sharh) {
 
     return `
       <div class="matn">
-        <div id="part-no" style="font-size: 2rem;" class="[text-shadow:_0_4px_4px_rgb(0_0_0_/_0.5)] -translate-y-7">${arNums(state.cur)}</div>
+        <div id="part-no" style="font-size: 2rem;" class="[text-shadow:_0_4px_4px_rgb(0_0_0_/_0.5)] -translate-y-7">${ar_nums(state.cur)}</div>
         <div class="first">${first}</div>
         <div class="second">${second}</div>
       </div>
       <div class="sharh">${sharh || ''}</div>`
 }
 
-function arNums(s) {
+function ar_nums(s) {
     return ('' + s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'.substr(+d, 1))
 }
 
-function partDone() {
+function part_done() {
     if (!audio) return
 
     if (!state.segs || state.segs.length === 0) return
@@ -341,7 +352,6 @@ function partDone() {
     const delayInput = document.getElementById('delay')
     const partRepsInput = document.getElementById('part-reps')
     const allRepsInput = document.getElementById('all-reps')
-    const partStartInput = part_start_input
     const partEndInput = part_end_input
 
     if (
@@ -375,7 +385,7 @@ function partDone() {
 
     if (shouldResetState) {
         audio.pause()
-        resetState()
+        reset_state()
         return
     }
 
@@ -404,7 +414,7 @@ function partDone() {
     }
 
     setTimeout(() => {
-        loadPart()
+        load_part()
         if (audio && audio.paused) {
             const playPromise = audio.play()
             if (playPromise !== undefined) {
@@ -423,7 +433,7 @@ function partDone() {
     }, delayTime || 0)
 }
 
-function resetState() {
+function reset_state() {
     if (!state.segs || state.segs.length === 0) {
         return
     }
@@ -445,7 +455,7 @@ function resetState() {
         audio.pause()
     }
 
-    loadPart()
+    load_part()
 }
 
 function seek(dir) {
@@ -466,11 +476,11 @@ function seek(dir) {
 
     audio.currentTime = state.segs[state.cur][0]
 
-    loadPart()
+    load_part()
     audio.play()
 }
 
-function handleTimeUpdate(audioEl) {
+function handle_time_update(audioEl) {
     if (!audioEl || audioEl.paused) return
 
     if (!part_progress_el) {
@@ -495,12 +505,11 @@ function handleTimeUpdate(audioEl) {
     }
 
     if (state.cur === 0 && curTime < partTime && curTime >= partTime - 0.35) {
-        loadPart()
+        load_part()
     }
 
     if (curTime >= nextTime) {
-        const partEndValue = part_end_input?.value || String(state.segs.length)
-        partDone()
+        part_done()
     }
 
     const progressPercentage = ((curTime - partTime) / (nextTime - partTime)) * 100
@@ -511,7 +520,7 @@ function handleTimeUpdate(audioEl) {
     }
 }
 
-function handleMatnChange(event) {
+function handle_matn_change(event) {
     const select = event.detail?.target || event.target
     if (!select) {
         return

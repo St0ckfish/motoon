@@ -142,29 +142,6 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
-.full-height {
-  height: calc(100vh - var(--top-offset, 0px));
-  overflow: auto;
-  /* Pad the bottom, only needed for iOS PWA with home bar */
-  padding-bottom: min(21px, env(safe-area-inset-bottom, 0px));
-}
-
-/* Buttons and inputs */
-.btn {
-  border: 1px solid #aaa;
-  padding: 0 0.5rem;
-  border-radius: 5px;
-  margin: 0 2px;
-  background-image: linear-gradient(to bottom, #fafbfc, #e9eced 90%);
-  font-size: 0.8rem;
-}
-.btn.active {
-  background-image: linear-gradient(to top, #fafbfc, #e9eced 90%);
-}
-.btn[disabled] {
-  cursor: not-allowed;
-  color: #aaa;
-}
 html.safari button:active {
   color: inherit;
 }
@@ -188,12 +165,7 @@ form textarea {
   display: block;
   width: 100%;
 }
-input:is([type='text'], [type='email'], [type='number']):focus,
-textarea:focus {
-  border-color: #66afe9;
-  outline: 0;
-  box-shadow: 0 0 6px #77777761;
-}
+
 html.ios input,
 html.ios select,
 html.ios textarea {
@@ -207,83 +179,7 @@ input[type='password'] {
 ::placeholder {
   color: #bbb;
 }
-.form-select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-  --pos: right;
-  background-position: var(--pos) 0.25rem center;
-  background-size: 16px 12px;
-}
-html[dir='rtl'] .form-select {
-  --pos: left;
-}
 
 [hidden] {
   display: none !important;
-}
-
-.icon {
-  display: inline-block;
-  color: #444;
-  width: 1.2rem;
-  height: 1.2rem;
-  fill: currentColor;
-  vertical-align: middle;
-  color: inherit;
-  pointer-events: none;
-}
-
-mark {
-  color: red;
-  font-weight: bold;
-  background: none;
-}
-
-/* Expand btn */
-.expand-btn {
-  padding: 0rem 0.8rem 0 0.5rem;
-}
-.expand-btn > svg {
-  transition: transform 200ms;
-}
-.expand-btn.expanded > svg {
-  transform: rotate(180deg);
-}
-
-.no-results {
-  text-align: center;
-  font-size: 1.5rem;
-  color: #999;
-}
-
-/* Popover */
-.popover {
-  background: #fbfbfb;
-  border-radius: 0.25rem;
-  box-shadow: 0 0 10px #ccc;
-  padding: 0.2rem 0.2rem;
-  margin-top: 0.1rem;
-  font-size: 0.9rem;
-}
-.popover-menu {
-  min-width: 6rem;
-}
-.popover-menu :is(button, a) {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.15rem 0.3rem;
-  border-radius: 0;
-}
-.popover-menu :is(button:hover, a:hover) {
-  background: #eee;
-}
-.popover-menu-checkboxes :is(button, a) {
-  max-width: 15rem;
-  width: 100%;
-  padding: 0.15rem 0.3rem;
-  text-align: left;
-}
-.popover-menu-checkboxes :is(button:hover, a:hover) {
-  background: #eee;
 }

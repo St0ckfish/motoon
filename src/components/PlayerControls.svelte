@@ -11,7 +11,7 @@
         ontimeupdate={handle_time_update}
     ></audio>
 
-    <div id="seek-btns" class="mb-8 font-sans flex flex-wrap items-center justify-center gap-2">
+    <div id="seek-btns" class="mb-8 flex flex-wrap items-center justify-center gap-2 font-sans">
         <div class="control-group mx-2 flex items-center rounded-full bg-white px-3 py-1 shadow">
             <Button
                 class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
@@ -121,7 +121,7 @@
                 </svg>
             </Button>
 
-            <p class="mx-2 text-sm font-medium text-black z-50">5s</p>
+            <p class="z-50 mx-2 text-sm font-medium text-black">5s</p>
             <Button
                 class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
                 aria-label="Skip backward 5 seconds"
@@ -139,54 +139,60 @@
         </div>
     </div>
 
-    <div id="repeat-cont" class="font-sans grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div id="repeat-cont" class="grid grid-cols-1 gap-8 font-sans lg:grid-cols-3">
         <div class="spinner-cont control-card rounded-lg bg-white p-4 shadow-sm">
-            <h3 class="mb-4 text-center text-lg font-medium text-gray-700 katab">نطاق التشغيل</h3>
+            <h3 class="katab mb-4 text-center text-lg font-medium text-gray-700">نطاق التشغيل</h3>
             <div>
                 <div class="mb-5 flex items-center justify-between">
-                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg katab">من</p>
+                    <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">من</p>
                     <div class="flex">
                         <Button
-                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Decrease start">–</Button
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Decrease start"
+                            onclick={() => handle_start_change(false)}>–</Button
                         >
                         <input
                             type="number"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                             id="part-start"
                             bind:this={part_start_input}
-                            value="1"
+                            value={current_start}
                             min="1"
+                            max={total_verses}
                             required
-                            oninput={handle_input_change}
+                            oninput={handle_start_input_change}
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Increase start">+</Button
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Increase start"
+                            onclick={() => handle_start_change(true)}>+</Button
                         >
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <p class="ml-3 font-medium text-gray-600 text-sm sm:text-lg katab">إلى</p>
+                    <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">إلى</p>
                     <div class="flex">
                         <Button
-                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Decrease end">–</Button
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Decrease end"
+                            onclick={() => handle_end_change(false)}>–</Button
                         >
                         <input
                             type="number"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                             id="part-end"
                             bind:this={part_end_input}
-                            value="1"
+                            value={current_end}
                             min="1"
+                            max={total_verses}
                             required
-                            oninput={handle_input_change}
+                            oninput={handle_end_input_change}
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Increase end">+</Button
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                            aria-label="Increase end"
+                            onclick={() => handle_end_change(true)}>+</Button
                         >
                     </div>
                 </div>
@@ -194,12 +200,12 @@
         </div>
 
         <div class="spinner-cont control-card rounded-lg bg-white p-4 shadow-sm">
-            <h3 class="mb-4 text-center text-lg font-medium text-gray-700 katab">التكرار</h3>
+            <h3 class="katab mb-4 text-center text-lg font-medium text-gray-700">التكرار</h3>
             <div>
                 <div class="mb-5 flex items-center">
                     <div class="ml-2 flex items-center">
                         <svg
-                            class="ml-2 h-6 w-6 max-[1235px]:w-5 max-[1235px]:h-5 text-blue-500"
+                            class="ml-2 h-6 w-6 text-blue-500 max-[1235px]:h-5 max-[1235px]:w-5"
                             width="24"
                             height="24"
                             viewBox="0 0 24 24"
@@ -213,22 +219,22 @@
                             <path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" />
                             <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3" /></svg
                         >
-                        <span class="text-gray-600 text-sm sm:text-lg katab">كامل</span>
+                        <span class="katab text-sm text-gray-600 sm:text-lg">كامل</span>
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
                             type="text"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                             id="all-reps"
                             value="1"
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -237,7 +243,7 @@
                 <div class="flex items-center">
                     <div class="ml-2 flex items-center">
                         <svg
-                            class="ml-2 h-6 w-6 text-blue-500 max-[1235px]:w-5 max-[1235px]:h-5"
+                            class="ml-2 h-6 w-6 text-blue-500 max-[1235px]:h-5 max-[1235px]:w-5"
                             width="24"
                             height="24"
                             viewBox="0 0 24 24"
@@ -252,22 +258,22 @@
                             <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3" />
                             <path d="M11 11l1 -1v4" /></svg
                         >
-                        <span class="text-gray-600 text-sm sm:text-lg katab">مقطع</span>
+                        <span class="katab text-sm text-gray-600 sm:text-lg">مقطع</span>
                     </div>
                     <div class="mr-auto flex items-center">
                         <Button
-                            class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             >–</Button
                         >
                         <input
                             type="text"
-                            class="spinner mx-2 w-16 max-[1235px]:w-8 max-[1000px]:w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                             id="part-reps"
                             value="1"
                             readonly
                         />
                         <Button
-                            class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             >+</Button
                         >
                     </div>
@@ -287,11 +293,11 @@
                         d="M19 22h1v-2h-1v-1a7.014 7.014 0 0 0-3.433-6.02c-.355-.21-.567-.547-.567-.901v-.158c0-.354.212-.691.566-.9A7.016 7.016 0 0 0 19 5V4h1V2H4v2h1v1a7.016 7.016 0 0 0 3.434 6.021c.354.209.566.545.566.9v.158c0 .354-.212.691-.566.9A7.016 7.016 0 0 0 5 19v1H4v2h15zM17 4v1a5.005 5.005 0 0 1-1.004 3H8.004A5.005 5.005 0 0 1 7 5V4h10zM9.45 14.702c.971-.574 1.55-1.554 1.55-2.623V12h2v.079c0 1.068.579 2.049 1.551 2.623A4.98 4.98 0 0 1 16.573 17H7.427a4.977 4.977 0 0 1 2.023-2.298z"
                     ></path></svg
                 >
-                <span class="mr-2 katab">السكت</span>
+                <span class="katab mr-2">السكت</span>
             </h3>
             <div class="flex items-center justify-center">
                 <Button
-                    class="decrease flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                    class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                     >–</Button
                 >
                 <input
@@ -302,7 +308,7 @@
                     readonly
                 />
                 <Button
-                    class="increase flex h-8 w-8 items-center text-lg justify-center rounded-full bg-gray-100 text-black shadow-sm transition-colors hover:bg-gray-200"
+                    class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                     >+</Button
                 >
             </div>
@@ -311,12 +317,15 @@
 </div>
 
 <script>
-// @ts-nocheck
 import {onDestroy, onMount} from 'svelte'
 
 import Button from '~/lib/components/ui/button/button.svelte'
 
 let {audio, part_start_input, part_end_input, save_settings, settings} = $props()
+
+let total_verses = $state(1)
+let current_start = $state(1)
+let current_end = $state(1)
 
 let playback_rate = $state(1.0)
 let playback_interval
@@ -326,23 +335,109 @@ const int_bound = (int, min, max) => Math.max(Math.min(int, max), min)
 onMount(() => {
     const saved_settings = settings
 
-    Object.keys(saved_settings)
-        .filter(id => document.querySelector(`#${id}`))
-        .forEach(id => {
-            document.querySelector(`#${id}`).value = saved_settings[id]
-        })
+    // Object.keys(saved_settings)
+    //     .filter(id => document.querySelector(`#${id}`))
+    //     .forEach(id => {
+    //         document.querySelector(`#${id}`).value = saved_settings[id]
+    //     })
 
     if (audio && saved_settings['play-speed']) {
         audio.playbackRate = parseFloat(saved_settings['play-speed'])
         playback_rate = audio.playbackRate
     }
+
+    document.addEventListener('verses-loaded', handle_verses_loaded)
 })
 
 onDestroy(() => {
     if (playback_interval) {
         clearInterval(playback_interval)
     }
+    document.removeEventListener('verses-loaded', handle_verses_loaded)
 })
+
+function handle_verses_loaded(e) {
+    if (e.detail && e.detail.total) {
+        total_verses = e.detail.total
+        current_end = total_verses
+
+        if (part_end_input) {
+            part_end_input.value = total_verses
+            part_end_input.max = total_verses
+        }
+    }
+}
+
+function handle_start_change(increase) {
+    const new_value = int_bound(current_start + (increase ? 1 : -1), 1, total_verses)
+    current_start = new_value
+
+    if (part_start_input) {
+        part_start_input.value = new_value
+    }
+
+    save_settings('part-start', new_value.toString())
+    notify_current_part_change(new_value)
+}
+
+function handle_end_change(increase) {
+    const new_value = int_bound(current_end + (increase ? 1 : -1), 1, total_verses)
+    current_end = new_value
+
+    if (part_end_input) {
+        part_end_input.value = new_value
+    }
+
+    save_settings('part-end', new_value.toString())
+}
+
+function handle_start_input_change(e) {
+    const input_value = parseInt(e.target.value, 10)
+
+    if (isNaN(input_value) || input_value < 1) {
+        current_start = 1
+        if (part_start_input) {
+            part_start_input.value = 1
+        }
+    } else if (input_value > total_verses) {
+        current_start = total_verses
+        if (part_start_input) {
+            part_start_input.value = total_verses
+        }
+    } else {
+        current_start = input_value
+    }
+
+    save_settings('part-start', current_start.toString())
+    notify_current_part_change(current_start)
+}
+
+function handle_end_input_change(e) {
+    const input_value = parseInt(e.target.value, 10)
+
+    if (isNaN(input_value) || input_value < 1) {
+        current_end = 1
+        if (part_end_input) {
+            part_end_input.value = 1
+        }
+    } else if (input_value > total_verses) {
+        current_end = total_verses
+        if (part_end_input) {
+            part_end_input.value = total_verses
+        }
+    } else {
+        current_end = input_value
+    }
+
+    save_settings('part-end', current_end.toString())
+}
+
+function notify_current_part_change(new_value) {
+    const event = new CustomEvent('start-input-change', {
+        detail: {value: new_value},
+    })
+    document.dispatchEvent(event)
+}
 
 function handle_button_action(e, action) {
     const button = e.currentTarget
@@ -374,66 +469,61 @@ function handle_button_action(e, action) {
 }
 
 function setup_button_interactions() {
-    const speed_buttons = document.querySelectorAll('.speed');
-    const skip_buttons = document.querySelectorAll('.skip');
-    
-    // Make sure we're targeting the correct buttons for increase/decrease
-    const spinner_buttons = document.querySelectorAll('.spinner-cont .increase, .spinner-cont .decrease');
+    const speed_buttons = document.querySelectorAll('.speed')
+    const skip_buttons = document.querySelectorAll('.skip')
+    const spinner_buttons = document.querySelectorAll(
+        '.spinner-cont .increase, .spinner-cont .decrease',
+    )
 
     speed_buttons.forEach(btn => {
-        btn.addEventListener('mousedown', e => handle_button_action(e, 'speed'));
-        btn.addEventListener('touchstart', e => handle_button_action(e, 'speed'));
-    });
+        btn.addEventListener('mousedown', e => handle_button_action(e, 'speed'))
+        btn.addEventListener('touchstart', e => handle_button_action(e, 'speed'))
+    })
 
     skip_buttons.forEach(btn => {
-        btn.addEventListener('mousedown', e => handle_button_action(e, 'skip'));
-        btn.addEventListener('touchstart', e => handle_button_action(e, 'skip'));
-    });
+        btn.addEventListener('mousedown', e => handle_button_action(e, 'skip'))
+        btn.addEventListener('touchstart', e => handle_button_action(e, 'skip'))
+    })
 
     spinner_buttons.forEach(btn => {
-        // Direct event handling for spinner buttons for reliability
-        btn.addEventListener('mousedown', e => {
-            const isIncrease = btn.classList.contains('increase');
-            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling;
-            
-            // Immediately handle the click
-            handle_rep_change(input, isIncrease);
-            
-            // Set up interval for holding the button
-            if (playback_interval) {
-                clearInterval(playback_interval);
-            }
-            
-            playback_interval = setInterval(() => {
-                handle_rep_change(input, isIncrease);
-            }, 150);
-        });
-        
-        btn.addEventListener('touchstart', e => {
-            const isIncrease = btn.classList.contains('increase');
-            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling;
-            
-            // Immediately handle the tap
-            handle_rep_change(input, isIncrease);
-            
-            // Set up interval for holding the button
-            if (playback_interval) {
-                clearInterval(playback_interval);
-            }
-            
-            playback_interval = setInterval(() => {
-                handle_rep_change(input, isIncrease);
-            }, 150);
-        });
-    });
+        btn.addEventListener('mousedown', () => {
+            const isIncrease = btn.classList.contains('increase')
+            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling
 
-    document.documentElement.addEventListener('mouseup', clear_action_interval);
-    document.documentElement.addEventListener('touchend', clear_action_interval);
+            handle_rep_change(input, isIncrease)
 
-    const number_inputs = document.querySelectorAll('input[type="number"]');
+            if (playback_interval) {
+                clearInterval(playback_interval)
+            }
+
+            playback_interval = setInterval(() => {
+                handle_rep_change(input, isIncrease)
+            }, 150)
+        })
+
+        btn.addEventListener('touchstart', () => {
+            const isIncrease = btn.classList.contains('increase')
+            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling
+
+            handle_rep_change(input, isIncrease)
+
+            if (playback_interval) {
+                clearInterval(playback_interval)
+            }
+
+            playback_interval = setInterval(() => {
+                handle_rep_change(input, isIncrease)
+            }, 150)
+        })
+    })
+
+    document.documentElement.addEventListener('mouseup', clear_action_interval)
+    document.documentElement.addEventListener('touchend', clear_action_interval)
+
+    const number_inputs = document.querySelectorAll('input[type="number"]')
     number_inputs.forEach(input => {
-        input.addEventListener('keydown', handle_number_input_keydown);
-    });
+        input.addEventListener('keydown', handle_number_input_keydown)
+    })
 }
 
 function clear_action_interval() {
@@ -445,14 +535,11 @@ function clear_action_interval() {
 
 function handle_number_input_keydown(e) {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        const target_button =
-            e.key === 'ArrowDown' ? e.target.previousElementSibling : e.target.nextElementSibling;
+        e.preventDefault()
 
-        handle_rep_change(e.target, e.key === 'ArrowUp');
+        handle_rep_change(e.target, e.key === 'ArrowUp')
     } else if (e.key === '-') {
-        // Prevent entering negative sign
-        e.preventDefault();
+        e.preventDefault()
     }
 }
 
@@ -481,86 +568,52 @@ function handle_skip(increase) {
 
 function handle_rep_change(el, increase) {
     if (!el) {
-        return;
+        return
     }
 
-    const id = el.id;
-    let val = el.value;
-    
+    const id = el.id
+    let val = el.value
 
     if (el.type === 'number') {
-        // Always convert to a number first
-        val = parseInt(val, 10) || 1;
-        val = val + (increase ? 1 : -1);
-        
-        // Set limits - never go below 1
+        val = parseInt(val, 10) || 1
+        val = val + (increase ? 1 : -1)
+
         if (val < 1) {
-            val = 1;
+            val = 1
         } else if (val > parseInt(el.max, 10)) {
-            val = parseInt(el.max, 10);
+            val = parseInt(el.max, 10)
         }
     } else if (id.endsWith('-reps')) {
         if (val === '∞') {
-            val = increase ? 1 : 10;
+            val = increase ? 1 : 10
         } else {
-            val = parseInt(val, 10) + (increase ? 1 : -1);
+            val = parseInt(val, 10) + (increase ? 1 : -1)
         }
         if (val === 0 || val === 11) {
-            val = '∞';
+            val = '∞'
         }
     } else if (id === 'delay') {
-        val = parseFloat(val.slice(0, -1)) + (increase ? 0.5 : -0.5);
+        val = parseFloat(val.slice(0, -1)) + (increase ? 0.5 : -0.5)
         if (val === 2.5) {
-            val = 2;
+            val = 2
         } else if (val < 0) {
-            val = 0;
+            val = 0
         }
-        val += 'x';
+        val += 'x'
     }
 
-    // Update the element's value directly
-    el.value = val;
-    console.log(`New value for ${id}: ${val}`);
-    
-    el.classList[el.validity.valid ? 'remove' : 'add']('invalid');
-    save_settings(id, val.toString());
-    
-    // If this is the start input changing, update the current displayed part
+    el.value = val
+
     if (id === 'part-start') {
-        const event = new CustomEvent('start-input-change', {
-            detail: { value: parseInt(val, 10) }
-        });
-        document.dispatchEvent(event);
+        current_start = parseInt(val, 10)
+        notify_current_part_change(current_start)
+    } else if (id === 'part-end') {
+        current_end = parseInt(val, 10)
     }
-}
 
-function handle_input_change(e) {
-    const el = e.target;
-    
-    // Make sure we have a valid number
-    if (el.type === 'number') {
-        let val = parseInt(el.value, 10);
-        
-        // Prevent negative values
-        if (isNaN(val) || val < 1) {
-            val = 1;
-            el.value = val;
-        }
-    }
-    
-    el.classList.toggle('invalid', !el.validity.valid);
-    save_settings(el.id, el.value);
-    
-    // If this is the start input changing, update the current displayed part
-    if (el.id === 'part-start' && parseInt(el.value, 10) > 0) {
-        const event = new CustomEvent('start-input-change', {
-            detail: { value: parseInt(el.value, 10) }
-        });
-        document.dispatchEvent(event);
-    }
+    el.classList[el.validity.valid ? 'remove' : 'add']('invalid')
+    save_settings(id, val.toString())
 }
-
-onMount(setup_button_interactions)
 
 function handle_time_update() {
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
@@ -568,6 +621,8 @@ function handle_time_update() {
         document.dispatchEvent(event)
     }
 }
+
+onMount(setup_button_interactions)
 </script>
 
 <style>
@@ -575,7 +630,7 @@ function handle_time_update() {
     font-family: 'Noto';
 }
 
-.katab{
+.katab {
     font-family: 'Kitab';
 }
 button {

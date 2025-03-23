@@ -1,7 +1,7 @@
-<div class="relative mb-6 w-full">
+<div class="relative mx-auto mb-6 max-w-10/12">
     <select
-        bind:this={selectElement}
-        on:change={handleChange}
+        bind:this={select_element}
+        onchange={handle_change}
         class="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 text-lg leading-tight shadow hover:border-gray-400 focus:outline-none"
     >
         <optgroup label="متون">
@@ -12,7 +12,6 @@
             <option value="نظم الورقات">نظم الورقات</option>
             <option value="الرحبية">الرحبية</option>
             <option value="نظم المقصود">نظم المقصود</option>
-            <option value="نظم نخبة الفكر">نظم نخبة الفكر</option>
             <option value="مائة المعاني والبيان">مائة المعاني والبيان</option>
         </optgroup>
         <optgroup label="المعلقات">
@@ -51,37 +50,34 @@
 </div>
 
 <script>
-// @ts-nocheck
+import {onMount} from 'svelte'
 
-import {createEventDispatcher, onMount} from 'svelte'
-
-const dispatch = createEventDispatcher()
-let selectElement
+let {change} = $props()
+let select_element = $state()
 
 onMount(() => {
-    // Check hash for initial selection
     const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
-    
-    if (selectElement) {
+
+    if (select_element) {
         if (hash) {
-            const options = Array.from(selectElement.options)
-            const matchedOption = options.find(option => option.value === hash)
-            if (matchedOption) {
-                selectElement.value = hash
+            const options = Array.from(select_element.options)
+            const matched_option = options.find(option => option.value === hash)
+            if (matched_option) {
+                select_element.value = hash
             }
         }
-        
-        if (selectElement.selectedOptions && selectElement.selectedOptions.length > 0) {
-            dispatch('change', {
-                target: selectElement,
+
+        if (select_element.selectedOptions && select_element.selectedOptions.length > 0) {
+            change({
+                target: select_element,
             })
         }
     }
 })
 
-function handleChange(e) {
+function handle_change(e) {
     if (e.target && e.target.selectedOptions && e.target.selectedOptions.length > 0) {
-        dispatch('change', e)
+        change(e)
     }
 }
 </script>
