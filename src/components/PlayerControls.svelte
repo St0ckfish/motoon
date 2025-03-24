@@ -13,20 +13,23 @@
 
     <div id="seek-btns" class="mb-8 flex flex-wrap items-center justify-center gap-2 font-sans">
         <div class="control-group mx-2 flex items-center rounded-full bg-white px-3 py-1 shadow">
-            <Button
-                class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Increase speed"
-            >
-                <svg
-                    class="h-6 w-6 text-black"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="M12 8L18 14L12 20" />
-                </svg>
-            </Button>
+            <Tooltip.Root openDelay={tooltipDelay}>
+                <Tooltip.Trigger class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
+                aria-label="Increase speed">
+                        <svg
+                            class="h-6 w-6 text-black"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M12 8L18 14L12 20" />
+                        </svg>
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                    <p>زيادة السرعة</p>
+                </Tooltip.Content>
+            </Tooltip.Root>
 
             <div id="play-speed" class="mx-3 flex flex-col items-center text-center">
                 <svg
@@ -89,53 +92,62 @@
                 </svg>
                 <p class="text-sm font-medium text-black">{playback_rate.toFixed(2)}x</p>
             </div>
-            <Button
-                class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Decrease speed"
-            >
-                <svg
-                    class="h-6 w-6 text-black"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="M12 8L6 14L12 20" />
-                </svg>
-            </Button>
+            <Tooltip.Root openDelay={tooltipDelay}>
+                <Tooltip.Trigger class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
+                aria-label="Decrease speed">
+                        <svg
+                            class="h-6 w-6 text-black"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M12 8L6 14L12 20" />
+                        </svg>
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                    <p>خفض السرعة</p>
+                </Tooltip.Content>
+            </Tooltip.Root>
         </div>
 
         <div class="control-group mx-4 flex items-center rounded-full bg-white px-3 py-1 shadow">
-            <Button
-                class="skip increase rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Skip forward 5 seconds"
-            >
-                <svg
-                    class="h-6 w-6 text-black"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
-                </svg>
-            </Button>
+            <Tooltip.Root openDelay={tooltipDelay}>
+                <Tooltip.Trigger class="skip increase rounded-full p-2 transition-colors hover:bg-gray-100"
+                aria-label="Skip forward 5 seconds">
+                        <svg
+                            class="h-6 w-6 text-black"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
+                        </svg>
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                    <p>تقديم</p>
+                </Tooltip.Content>
+            </Tooltip.Root>
 
             <p class="z-50 mx-2 text-sm font-medium text-black">5s</p>
-            <Button
-                class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Skip backward 5 seconds"
-            >
-                <svg
-                    class="h-6 w-6 text-black"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
-                </svg>
-            </Button>
+            <Tooltip.Root openDelay={tooltipDelay}>
+                <Tooltip.Trigger                         class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
+                aria-label="Skip backward 5 seconds">
+                        <svg
+                            class="h-6 w-6 text-black"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+                        </svg>
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                    <p>إرجاع</p>
+                </Tooltip.Content>
+            </Tooltip.Root>
         </div>
     </div>
 
@@ -146,11 +158,16 @@
                 <div class="mb-5 flex items-center justify-between">
                     <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">من</p>
                     <div class="flex">
-                        <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Decrease start"
-                            onclick={() => handle_start_change(false)}>–</Button
-                        >
+                            onclick={() => handle_start_change(false)}>
+                                –
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>خفض البداية</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
                         <input
                             type="number"
                             class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
@@ -162,22 +179,32 @@
                             required
                             oninput={handle_start_input_change}
                         />
-                        <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Increase start"
-                            onclick={() => handle_start_change(true)}>+</Button
-                        >
+                            onclick={() => handle_start_change(true)}>+
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>زيادة البداية</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between">
                     <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">إلى</p>
                     <div class="flex">
-                        <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger                                     class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Decrease end"
-                            onclick={() => handle_end_change(false)}>–</Button
-                        >
+                            onclick={() => handle_end_change(false)}>
+                            –
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>خفض النهاية</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
+
                         <input
                             type="number"
                             class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
@@ -189,11 +216,16 @@
                             required
                             oninput={handle_end_input_change}
                         />
-                        <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                             aria-label="Increase end"
-                            onclick={() => handle_end_change(true)}>+</Button
-                        >
+                            onclick={() => handle_end_change(true)}>
+                            +
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>زيادة النهاية</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
                     </div>
                 </div>
             </div>
@@ -222,10 +254,14 @@
                         <span class="katab text-sm text-gray-600 sm:text-lg">كامل</span>
                     </div>
                     <div class="mr-auto flex items-center">
-                        <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            >–</Button
-                        >
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                                –
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>خفض التكرار الكامل</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
                         <input
                             type="text"
                             class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
@@ -233,10 +269,14 @@
                             value="1"
                             readonly
                         />
-                        <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            >+</Button
-                        >
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                                +
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>زيادة التكرار الكامل</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
                     </div>
                 </div>
 
@@ -261,10 +301,14 @@
                         <span class="katab text-sm text-gray-600 sm:text-lg">مقطع</span>
                     </div>
                     <div class="mr-auto flex items-center">
-                        <Button
-                            class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            >–</Button
-                        >
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                                –
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>خفض تكرار المقطع</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
                         <input
                             type="text"
                             class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
@@ -272,10 +316,15 @@
                             value="1"
                             readonly
                         />
-                        <Button
-                            class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            >+</Button
-                        >
+                        <Tooltip.Root openDelay={tooltipDelay}>
+                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                                +
+                            </Tooltip.Trigger>
+                            <Tooltip.Content>
+                                <p>زيادة تكرار المقطع</p>
+                            </Tooltip.Content>
+                        </Tooltip.Root>
+
                     </div>
                 </div>
             </div>
@@ -296,10 +345,15 @@
                 <span class="katab mr-2">السكت</span>
             </h3>
             <div class="flex items-center justify-center">
-                <Button
+                <Tooltip.Root openDelay={tooltipDelay}>
+
+                    <Tooltip.Trigger
                     class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                    >–</Button
-                >
+                    >–</Tooltip.Trigger>
+                    <Tooltip.Content>
+                        <p>خفض مدة السكت</p>
+                    </Tooltip.Content>
+                </Tooltip.Root>
                 <input
                     type="text"
                     class="spinner mx-2 w-16 rounded-md border-none border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
@@ -307,10 +361,15 @@
                     value="0x"
                     readonly
                 />
-                <Button
-                    class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                    >+</Button
-                >
+
+                <Tooltip.Root openDelay={tooltipDelay}>
+                    <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                            +
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                        <p>زيادة مدة السكت</p>
+                    </Tooltip.Content>
+                  </Tooltip.Root>
             </div>
         </div>
     </div>
@@ -319,6 +378,7 @@
 <script>
 import {onDestroy, onMount} from 'svelte'
 
+import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 import Button from '~/lib/components/ui/button/button.svelte'
 
 let {audio, part_start_input, part_end_input, save_settings, settings} = $props()
@@ -327,6 +387,7 @@ let total_verses = $state(1)
 let current_start = $state(1)
 let current_end = $state(1)
 
+let tooltipDelay = $state(200)
 let playback_rate = $state(1.0)
 let playback_interval
 
@@ -632,18 +693,6 @@ onMount(setup_button_interactions)
 
 .katab {
     font-family: 'Kitab';
-}
-button {
-    transition: all 0.2s ease;
-}
-
-button:active {
-    transform: scale(0.95);
-}
-
-input.invalid {
-    border-color: red;
-    background-color: rgba(255, 0, 0, 0.1);
 }
 
 .control-card {

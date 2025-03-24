@@ -2,13 +2,32 @@
     id="text"
     bind:this={text_container_el}
     class="relative mb-6 min-h-64 rounded-lg bg-[#fefdfb] p-6 shadow-md transition-opacity duration-250"
+    style="opacity: {opacity};"
 >
     <div
         id="part-progress"
         bind:this={part_progress_el}
         class="absolute top-0 right-0 h-0.5 w-0 max-w-full bg-gradient-to-l from-[#eee] to-[#cacaca] transition-all duration-500"
     ></div>
-    <div id="tpl-cont" bind:this={tpl_cont_el} class="text-center"></div>
+    <div id="tpl-cont" bind:this={tpl_cont_el} class="text-center">
+        {#if content.type === 'title'}
+            <div class="title">{@html content.title}</div>
+            <div class="desc">{@html content.desc}</div>
+        {:else if content.type === 'bayt'}
+            <div class="matn">
+                <div
+                    id="part-no"
+                    style="font-size: 2rem;"
+                    class="-translate-y-7 [text-shadow:_0_4px_4px_rgb(0_0_0_/_0.5)]"
+                >
+                    {content.partNumber}
+                </div>
+                <div class="first">{content.first}</div>
+                <div class="second">{content.second}</div>
+            </div>
+            <div class="sharh">{content.sharh}</div>
+        {/if}
+    </div>
 </div>
 
 <script>
@@ -17,13 +36,95 @@ let {
     tpl_cont_el = $bindable(),
     part_progress_el = $bindable(),
 } = $props()
+
+let content = $state({
+    type: 'title',
+    title: '',
+    desc: '',
+    first: '',
+    second: '',
+    sharh: '',
+    partNumber: '',
+})
+
+let opacity = $state(1)
+
+const ar_nums = s => ('' + s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'.slice(+d, +d + 1))
+
+export function setTitleContent(title, desc) {
+    content = {
+        type: 'title',
+        title: title || '',
+        desc: desc || '',
+        first: '',
+        second: '',
+        sharh: '',
+        partNumber: '',
+    }
+}
+
+export function setBaytContent(parts, sharh, partNumber) {
+    let first = ''
+    let second = ''
+
+    if (Array.isArray(parts)) {
+        if (parts.length === 1) {
+            if (parts[0].includes('،')) {
+                const splitParts = parts[0].split('،')
+                if (splitParts.length >= 2) {
+                    first = splitParts[0] + '،'
+                    second = splitParts.slice(1).join('،')
+                } else {
+                    first = parts[0]
+                    second = parts[0]
+                }
+            } else {
+                first = parts[0]
+                second = parts[0]
+            }
+        } else {
+            first = parts[0] || ''
+            second = parts[1] || ''
+        }
+    } else if (parts) {
+        if (parts.includes('=')) {
+            const splitParts = parts.split('=')
+            first = splitParts[0] || ''
+            second = splitParts[1] || ''
+        } else if (parts.includes('،') || parts.includes('؛')) {
+            const splitChar = parts.includes('،') ? '،' : '؛'
+            const splitIndex = parts.indexOf(splitChar)
+
+            if (splitIndex > 0) {
+                first = parts.substring(0, splitIndex + 1)
+                second = parts.substring(splitIndex + 1)
+            } else {
+                first = parts
+                second = ''
+            }
+        } else {
+            first = parts
+            second = ''
+        }
+    }
+
+    content = {
+        type: 'bayt',
+        title: '',
+        desc: '',
+        first,
+        second,
+        sharh: sharh || '',
+        partNumber: ar_nums(partNumber || ''),
+    }
+}
+
+export function setOpacity(value) {
+    opacity = value
+}
 </script>
 
 <style>
-#text {
-    opacity: 1;
-}
-
 :global(.title) {
     font-size: 2rem;
     font-weight: bold;
