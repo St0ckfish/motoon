@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>{`${matnName} | مقرئ المتون`}</title>
+</svelte:head>
+
 <main class="rtl container mx-auto max-w-4xl px-4 py-6">
     <h1
         class="mb-6 text-center text-3xl font-bold"
@@ -8,12 +12,7 @@
 
     <MatnSelector change={handle_matn_change} />
 
-    <TextDisplay
-        bind:this={textDisplay}
-        bind:text_container_el
-        bind:tpl_cont_el
-        bind:part_progress_el
-    />
+    <TextDisplay bind:this={textDisplay} bind:part_progress_el />
 
     <PlayerControls
         bind:audio
@@ -34,7 +33,7 @@ import MatnSelector from '../components/MatnSelector.svelte'
 import PlayerControls from '../components/PlayerControls.svelte'
 import TextDisplay from '../components/TextDisplay.svelte'
 
-let state = $state({
+let main_state = $state({
     all_reps: 1,
     part_reps: 1,
     cur: 0,
@@ -45,6 +44,7 @@ let state = $state({
 
 let settings = $state(JSON.parse(localStorage.getItem('settings') || '{}'))
 
+let matnName = $state('')
 let audio = $state(null)
 let clicker = $state(null)
 let textDisplay = $state(null)
@@ -52,30 +52,34 @@ let textDisplay = $state(null)
 let part_start_input = $state(null)
 let part_end_input = $state(null)
 let part_progress_el = $state(null)
-let text_container_el = $state(null)
-let tpl_cont_el = $state(null)
+let delay_input = $state(null)
+let part_reps_input = $state(null)
+let all_reps_input = $state(null)
 
 onMount(() => {
     clicker = new Audio('click.mp3')
 
-    document.addEventListener('timeupdate', e => {
+    const timeUpdateHandler = e => {
         if (e.detail) {
             handle_time_update(e.detail)
         }
-    })
+    }
 
-    document.addEventListener('start-input-change', e => {
+    const startInputChangeHandler = e => {
         if (e.detail && e.detail.value) {
-            state.cur = e.detail.value - 1
-            state.part_reps = 1
+            main_state.cur = e.detail.value - 1
+            main_state.part_reps = 1
 
             load_part()
 
-            if (audio && state.segs && state.segs[state.cur]) {
-                audio.currentTime = state.segs[state.cur][0]
+            if (audio && main_state.segs && main_state.segs[main_state.cur]) {
+                audio.currentTime = main_state.segs[main_state.cur][0]
             }
         }
-    })
+    }
+
+    window.addEventListener('timeupdate', timeUpdateHandler)
+    window.addEventListener('start-input-change', startInputChangeHandler)
 
     const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
     if (hash) {
@@ -87,9 +91,14 @@ onMount(() => {
             }
         }
     }
+
+    return () => {
+        window.removeEventListener('timeupdate', timeUpdateHandler)
+        window.removeEventListener('start-input-change', startInputChangeHandler)
+    }
 })
 
-async function load_matn(matnName, matnId) {
+async function load_matn(matn_name, matnId) {
     if (!matnId) {
         show_error('خطأ في تحميل المتن', 'معرّف المتن غير صالح')
         return
@@ -136,7 +145,8 @@ async function load_matn(matnName, matnId) {
 
         const audioUrl = lines[0].trim()
         const segments = []
-        let currentTitle = matnName
+        let currentTitle = matn_name
+        matnName = matn_name
 
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim()
@@ -190,8 +200,8 @@ async function load_matn(matnName, matnId) {
         audio.src = audioUrl
         audio.playbackRate = oldPlaybackRate
 
-        state.title = currentTitle
-        state.segs = segments.map(seg => {
+        main_state.title = currentTitle
+        main_state.segs = segments.map(seg => {
             let text = seg.text
             if (text && !text.includes('=') && (text.includes('،') || text.includes('؛'))) {
                 const split_char = text.includes('،') ? '،' : '؛'
@@ -204,12 +214,11 @@ async function load_matn(matnName, matnId) {
         })
 
         history.replaceState(null, '#' + matnId.replaceAll(' ', '-'))
-        document.title = `${matnName} | مقرئ المتون`
 
         const total_verses =
-            state.segs.length > 0 && state.segs[0][1] === currentTitle
-                ? state.segs.length - 1
-                : state.segs.length
+            main_state.segs.length > 0 && main_state.segs[0][1] === currentTitle
+                ? main_state.segs.length - 1
+                : main_state.segs.length
 
         dispatch_verses_loaded_event(total_verses)
 
@@ -245,14 +254,14 @@ function dispatch_verses_loaded_event(total) {
     const event = new CustomEvent('verses-loaded', {
         detail: {total: total},
     })
-    document.dispatchEvent(event)
+    window.dispatchEvent(event)
 }
 
 onDestroy(() => {
     if (audio) {
         audio.pause()
     }
-    document.removeEventListener('timeupdate', handle_time_update)
+    window.removeEventListener('timeupdate', handle_time_update)
 })
 
 function save_settings(id, value) {
@@ -261,11 +270,11 @@ function save_settings(id, value) {
 }
 
 function load_part() {
-    if (!textDisplay || !state.segs || state.segs.length === 0) {
+    if (!textDisplay || !main_state.segs || main_state.segs.length === 0) {
         return
     }
 
-    let cur = state.segs[state.cur]
+    let cur = main_state.segs[main_state.cur]
     if (!cur) {
         return
     }
@@ -274,8 +283,8 @@ function load_part() {
 
     setTimeout(() => {
         try {
-            if (state.cur === 0) {
-                let titleText = state.title
+            if (main_state.cur === 0) {
+                let titleText = main_state.title
                 if (!titleText || (Array.isArray(titleText) && titleText.length === 0)) {
                     titleText = cur[1]
                 }
@@ -284,7 +293,7 @@ function load_part() {
                 textDisplay.setTitleContent(titleText, descText)
             } else if (cur[1] && cur[1].includes('=')) {
                 const parts = cur[1].split('=')
-                textDisplay.setBaytContent(parts, cur[2] || '', state.cur)
+                textDisplay.setBaytContent(parts, cur[2] || '', main_state.cur)
             } else if (cur[1] && (cur[1].includes('،') || cur[1].includes('؛'))) {
                 const split_char = cur[1].includes('،') ? '،' : '؛'
                 const split_index = cur[1].indexOf(split_char)
@@ -294,7 +303,7 @@ function load_part() {
                         cur[1].substring(0, split_index + 1),
                         cur[1].substring(split_index + 1),
                     ]
-                    textDisplay.setBaytContent(parts, cur[2] || '', state.cur)
+                    textDisplay.setBaytContent(parts, cur[2] || '', main_state.cur)
                 } else {
                     textDisplay.setTitleContent(cur[1], cur[2] || '')
                 }
@@ -319,40 +328,35 @@ function load_part() {
 function part_done() {
     if (!audio) return
 
-    if (!state.segs || state.segs.length === 0) return
-
-    const delayInput = document.getElementById('delay')
-    const partRepsInput = document.getElementById('part-reps')
-    const allRepsInput = document.getElementById('all-reps')
-    const partEndInput = part_end_input
+    if (!main_state.segs || main_state.segs.length === 0) return
 
     if (
-        state.cur === 0 &&
-        partEndInput?.value === '1' &&
-        state.segs.length > 1 &&
-        state.isFirstPlay
+        main_state.cur === 0 &&
+        part_end_input?.value === '1' &&
+        main_state.segs.length > 1 &&
+        main_state.isFirstPlay
     ) {
-        partEndInput.value = state.segs.length
-        state.isFirstPlay = false
+        part_end_input.value = main_state.segs.length
+        main_state.isFirstPlay = false
     }
 
-    const delayValue = delayInput?.value || '0x'
-    const partRepsValue = partRepsInput?.value || '1'
-    const partEndValue = partEndInput?.value || String(state.segs.length)
-    const allRepsValue = allRepsInput?.value || '1'
+    const delayValue = delay_input?.value || '0x'
+    const partRepsValue = part_reps_input?.value || '1'
+    const partEndValue = part_end_input?.value || String(main_state.segs.length)
+    const allRepsValue = all_reps_input?.value || '1'
 
     let lastDur =
-        state.cur + 1 < state.segs.length
-            ? state.segs[state.cur + 1][0] - state.segs[state.cur][0]
+        main_state.cur + 1 < main_state.segs.length
+            ? main_state.segs[main_state.cur + 1][0] - main_state.segs[main_state.cur][0]
             : 5
 
     let delayTime = +delayValue.slice(0, -1) * lastDur * 1000
     let partRepsVal = +partRepsValue
     let partEndVal = +partEndValue
 
-    const isAtLastPart = state.cur + 1 >= partEndVal
-    const hasCompletedPartReps = state.part_reps >= partRepsVal
-    const hasCompletedAllReps = state.all_reps >= +allRepsValue
+    const isAtLastPart = main_state.cur + 1 >= partEndVal
+    const hasCompletedPartReps = main_state.part_reps >= partRepsVal
+    const hasCompletedAllReps = main_state.all_reps >= +allRepsValue
     const shouldResetState = isAtLastPart && hasCompletedPartReps && hasCompletedAllReps
 
     if (shouldResetState) {
@@ -361,24 +365,29 @@ function part_done() {
         return
     }
 
-    if (state.part_reps >= partRepsVal) {
-        state.part_reps = 1
-        state.cur++
+    if (main_state.part_reps >= partRepsVal) {
+        main_state.part_reps = 1
+        main_state.cur++
     } else {
-        state.part_reps++
+        main_state.part_reps++
     }
 
-    if (state.cur + 1 > partEndVal) {
+    if (main_state.cur + 1 > partEndVal) {
         audio.pause()
-        state.cur = part_start_input ? +part_start_input.value - 1 : 0
-        state.all_reps++
+        if (allRepsValue > 1 && main_state.all_reps < +allRepsValue) {
+            main_state.cur = part_start_input ? +part_start_input.value - 1 : 0
+            main_state.all_reps++
 
-        if (clicker) {
-            clicker.volume = 0.75
-            clicker.play()
+            if (clicker) {
+                clicker.volume = 0.75
+                clicker.play()
+            }
+
+            delayTime = delayTime || 750
+        } else {
+            reset_state()
+            return
         }
-
-        delayTime = delayTime || 750
     }
 
     if (delayTime) {
@@ -391,11 +400,11 @@ function part_done() {
             const playPromise = audio.play()
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
-                    document.addEventListener(
+                    window.addEventListener(
                         'click',
                         function resumeAudio() {
                             audio.play()
-                            document.removeEventListener('click', resumeAudio)
+                            window.removeEventListener('click', resumeAudio)
                         },
                         {once: true},
                     )
@@ -406,21 +415,17 @@ function part_done() {
 }
 
 function reset_state() {
-    if (!state.segs || state.segs.length === 0) {
+    if (!main_state.segs || main_state.segs.length === 0) {
         return
-    }
-
-    if (!part_progress_el) {
-        part_progress_el = document.querySelector('[id^="part-progress"]')
     }
 
     if (part_progress_el) {
         part_progress_el.style.width = '0'
     }
 
-    state.all_reps = 1
-    state.part_reps = 1
-    state.cur = 0
+    main_state.all_reps = 1
+    main_state.part_reps = 1
+    main_state.cur = 0
 
     if (audio) {
         audio.currentTime = 0
@@ -431,22 +436,27 @@ function reset_state() {
 }
 
 function seek(dir) {
-    if (!audio || !state.segs || state.segs.length === 0) return
+    if (!audio || !main_state.segs || main_state.segs.length === 0) return
 
     audio.pause()
 
     if (dir === 1) {
         for (
             ;
-            state.cur < state.segs.length - 1 && audio.currentTime > state.segs[state.cur][0];
-            state.cur++
+            main_state.cur < main_state.segs.length - 1 &&
+            audio.currentTime > main_state.segs[main_state.cur][0];
+            main_state.cur++
         );
-        state.cur--
+        main_state.cur--
     } else {
-        for (; state.cur > 0 && audio.currentTime < state.segs[state.cur][0]; state.cur--);
+        for (
+            ;
+            main_state.cur > 0 && audio.currentTime < main_state.segs[main_state.cur][0];
+            main_state.cur--
+        );
     }
 
-    audio.currentTime = state.segs[state.cur][0]
+    audio.currentTime = main_state.segs[main_state.cur][0]
 
     load_part()
     audio.play()
@@ -459,24 +469,29 @@ function handle_time_update(audioEl) {
         return
     }
 
-    if (!state.segs || state.segs.length === 0 || !state.segs[state.cur]) return
+    if (!main_state.segs || main_state.segs.length === 0 || !main_state.segs[main_state.cur]) return
 
     let curTime = audioEl.currentTime
-    let partTime = state.segs[state.cur][0]
+    let partTime = main_state.segs[main_state.cur][0]
     let nextTime =
-        state.cur < state.segs.length - 1 ? state.segs[state.cur + 1][0] : audioEl.duration
+        main_state.cur < main_state.segs.length - 1
+            ? main_state.segs[main_state.cur + 1][0]
+            : audioEl.duration
 
-    if (state.cur > 0 && curTime < partTime) {
+    if (main_state.cur > 0 && curTime < partTime) {
         seek(-1)
         return
     }
 
-    if (state.cur < state.segs.length - 2 && curTime > state.segs[state.cur + 2][0]) {
+    if (
+        main_state.cur < main_state.segs.length - 2 &&
+        curTime > main_state.segs[main_state.cur + 2][0]
+    ) {
         seek(1)
         return
     }
 
-    if (state.cur === 0 && curTime < partTime && curTime >= partTime - 0.35) {
+    if (main_state.cur === 0 && curTime < partTime && curTime >= partTime - 0.35) {
         load_part()
     }
 

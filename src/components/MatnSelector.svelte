@@ -65,11 +65,10 @@ import {
 } from '../lib/components/ui/select'
 
 const {change} = $props()
-let currentValue = $state('الأرجوزة الميئية')
+let currentValue = $state('الأرجوزة الميئية')
 
 function createChangeEvent(value) {
-    const stringValue =
-        typeof value === 'object' && value !== null ? value.value || value.toString() : value
+    const stringValue = value?.value || value?.toString?.() || value
 
     return {
         target: {
@@ -92,35 +91,27 @@ onMount(() => {
 
     if (hash && hash.trim() !== '') {
         currentValue = hash
-    }
-
-    if (typeof change === 'function') {
-        setTimeout(() => {
-            change(createChangeEvent(currentValue))
-        }, 100)
+        handleChange(hash)
+    } else {
+        handleChange('الأرجوزة الميئية')
     }
 })
 
 function handleChange(value) {
     if (!value) return
 
-    let stringValue = value
-    if (typeof value === 'object' && value !== null) {
-        stringValue = value.value || value.toString()
-    }
+    const stringValue = value?.value || value?.toString?.() || value
 
-    if (stringValue === currentValue) return
+    if (stringValue === currentValue && !change) return
 
     currentValue = stringValue
 
-    if (typeof change === 'function') {
+    if (change) {
         const evt = createChangeEvent(stringValue)
         change(evt)
 
         setTimeout(() => {
-            if (typeof stringValue === 'string') {
-                history.pushState(null, '', '#' + stringValue.replace(/\s+/g, '-'))
-            }
+            window.history.pushState(null, '', '#' + stringValue.replace(/\s+/g, '-'))
         }, 100)
     }
 }

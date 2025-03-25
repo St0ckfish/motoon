@@ -14,17 +14,19 @@
     <div id="seek-btns" class="mb-8 flex flex-wrap items-center justify-center gap-2 font-sans">
         <div class="control-group mx-2 flex items-center rounded-full bg-white px-3 py-1 shadow">
             <Tooltip.Root openDelay={tooltipDelay}>
-                <Tooltip.Trigger class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Increase speed">
-                        <svg
-                            class="h-6 w-6 text-black"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M12 8L18 14L12 20" />
-                        </svg>
+                <Tooltip.Trigger
+                    class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
+                    aria-label="Increase speed"
+                >
+                    <svg
+                        class="h-6 w-6 text-black"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M12 8L18 14L12 20" />
+                    </svg>
                 </Tooltip.Trigger>
                 <Tooltip.Content>
                     <p>زيادة السرعة</p>
@@ -93,17 +95,19 @@
                 <p class="text-sm font-medium text-black">{playback_rate.toFixed(2)}x</p>
             </div>
             <Tooltip.Root openDelay={tooltipDelay}>
-                <Tooltip.Trigger class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Decrease speed">
-                        <svg
-                            class="h-6 w-6 text-black"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M12 8L6 14L12 20" />
-                        </svg>
+                <Tooltip.Trigger
+                    class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
+                    aria-label="Decrease speed"
+                >
+                    <svg
+                        class="h-6 w-6 text-black"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M12 8L6 14L12 20" />
+                    </svg>
                 </Tooltip.Trigger>
                 <Tooltip.Content>
                     <p>خفض السرعة</p>
@@ -113,17 +117,19 @@
 
         <div class="control-group mx-4 flex items-center rounded-full bg-white px-3 py-1 shadow">
             <Tooltip.Root openDelay={tooltipDelay}>
-                <Tooltip.Trigger class="skip increase rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Skip forward 5 seconds">
-                        <svg
-                            class="h-6 w-6 text-black"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
-                        </svg>
+                <Tooltip.Trigger
+                    class="skip increase rounded-full p-2 transition-colors hover:bg-gray-100"
+                    aria-label="Skip forward 5 seconds"
+                >
+                    <svg
+                        class="h-6 w-6 text-black"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
+                    </svg>
                 </Tooltip.Trigger>
                 <Tooltip.Content>
                     <p>تقديم</p>
@@ -132,17 +138,19 @@
 
             <p class="z-50 mx-2 text-sm font-medium text-black">5s</p>
             <Tooltip.Root openDelay={tooltipDelay}>
-                <Tooltip.Trigger                         class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
-                aria-label="Skip backward 5 seconds">
-                        <svg
-                            class="h-6 w-6 text-black"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
-                        </svg>
+                <Tooltip.Trigger
+                    class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
+                    aria-label="Skip backward 5 seconds"
+                >
+                    <svg
+                        class="h-6 w-6 text-black"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+                    </svg>
                 </Tooltip.Trigger>
                 <Tooltip.Content>
                     <p>إرجاع</p>
@@ -159,30 +167,33 @@
                     <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">من</p>
                     <div class="flex">
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Decrease start"
-                            onclick={() => handle_start_change(false)}>
+                            <Tooltip.Trigger
+                                class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                aria-label="Decrease start"
+                                onclick={() => handle_start_change(false)}
+                            >
                                 –
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>خفض البداية</p>
                             </Tooltip.Content>
                         </Tooltip.Root>
-                        <input
-                            type="number"
-                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
+                        <NumberInput
                             id="part-start"
-                            bind:this={part_start_input}
                             value={current_start}
-                            min="1"
+                            display_value={current_start_display}
+                            min={1}
                             max={total_verses}
-                            required
-                            oninput={handle_start_input_change}
+                            oninput={val => handle_start_input_change(val)}
+                            class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
+                            bind:this={part_start_input}
                         />
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Increase start"
-                            onclick={() => handle_start_change(true)}>+
+                            <Tooltip.Trigger
+                                class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                aria-label="Increase start"
+                                onclick={() => handle_start_change(true)}
+                                >+
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>زيادة البداية</p>
@@ -195,32 +206,35 @@
                     <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">إلى</p>
                     <div class="flex">
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger                                     class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Decrease end"
-                            onclick={() => handle_end_change(false)}>
-                            –
+                            <Tooltip.Trigger
+                                class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                aria-label="Decrease end"
+                                onclick={() => handle_end_change(false)}
+                            >
+                                –
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>خفض النهاية</p>
                             </Tooltip.Content>
                         </Tooltip.Root>
 
-                        <input
-                            type="number"
-                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
+                        <NumberInput
                             id="part-end"
-                            bind:this={part_end_input}
                             value={current_end}
-                            min="1"
+                            display_value={current_end_display}
+                            min={1}
                             max={total_verses}
-                            required
-                            oninput={handle_end_input_change}
+                            oninput={val => handle_end_input_change(val)}
+                            class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
+                            bind:this={part_end_input}
                         />
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                            aria-label="Increase end"
-                            onclick={() => handle_end_change(true)}>
-                            +
+                            <Tooltip.Trigger
+                                class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                aria-label="Increase end"
+                                onclick={() => handle_end_change(true)}
+                            >
+                                +
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>زيادة النهاية</p>
@@ -255,22 +269,34 @@
                     </div>
                     <div class="mr-auto flex items-center">
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                            <Tooltip.Trigger
+                                class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                onclick={() => handle_all_reps_change(false)}
+                            >
                                 –
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>خفض التكرار الكامل</p>
                             </Tooltip.Content>
                         </Tooltip.Root>
-                        <input
-                            type="text"
-                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
+                        <NumberInput
                             id="all-reps"
-                            value="1"
-                            readonly
+                            value={all_reps}
+                            display_value={all_reps_display}
+                            min={1}
+                            max={10}
+                            oninput={val => {
+                                all_reps = val
+                                all_reps_display = ar_nums(val.toString())
+                                save_settings('all-reps', val.toString())
+                            }}
+                            class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                         />
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                            <Tooltip.Trigger
+                                class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                onclick={() => handle_all_reps_change(true)}
+                            >
                                 +
                             </Tooltip.Trigger>
                             <Tooltip.Content>
@@ -302,29 +328,40 @@
                     </div>
                     <div class="mr-auto flex items-center">
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                            <Tooltip.Trigger
+                                class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                onclick={() => handle_part_reps_change(false)}
+                            >
                                 –
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>خفض تكرار المقطع</p>
                             </Tooltip.Content>
                         </Tooltip.Root>
-                        <input
-                            type="text"
-                            class="spinner mx-2 w-16 rounded-md border border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
+                        <NumberInput
                             id="part-reps"
-                            value="1"
-                            readonly
+                            value={part_reps}
+                            display_value={part_reps_display}
+                            min={1}
+                            max={10}
+                            oninput={val => {
+                                part_reps = val
+                                part_reps_display = ar_nums(val.toString())
+                                save_settings('part-reps', val.toString())
+                            }}
+                            class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                         />
                         <Tooltip.Root openDelay={tooltipDelay}>
-                            <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
+                            <Tooltip.Trigger
+                                class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                                onclick={() => handle_part_reps_change(true)}
+                            >
                                 +
                             </Tooltip.Trigger>
                             <Tooltip.Content>
                                 <p>زيادة تكرار المقطع</p>
                             </Tooltip.Content>
                         </Tooltip.Root>
-
                     </div>
                 </div>
             </div>
@@ -346,97 +383,158 @@
             </h3>
             <div class="flex items-center justify-center">
                 <Tooltip.Root openDelay={tooltipDelay}>
-
                     <Tooltip.Trigger
-                    class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
-                    >–</Tooltip.Trigger>
+                        class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                        onclick={() => handle_delay_change(false)}>–</Tooltip.Trigger
+                    >
                     <Tooltip.Content>
                         <p>خفض مدة السكت</p>
                     </Tooltip.Content>
                 </Tooltip.Root>
-                <input
-                    type="text"
-                    class="spinner mx-2 w-16 rounded-md border-none border-gray-300 px-2 py-1 text-center shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                <NumberInput
                     id="delay"
-                    value="0x"
-                    readonly
+                    value={delay_value}
+                    display_value={delay_value_display}
+                    min={0}
+                    max={5}
+                    oninput={val => {
+                        delay_value = val
+                        delay_value_display = ar_nums(val.toString())
+                        save_settings('delay', val.toString())
+                    }}
+                    class="mx-2 w-16 border-none shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                 />
-
                 <Tooltip.Root openDelay={tooltipDelay}>
-                    <Tooltip.Trigger class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200">
-                            +
+                    <Tooltip.Trigger
+                        class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
+                        onclick={() => handle_delay_change(true)}
+                    >
+                        +
                     </Tooltip.Trigger>
                     <Tooltip.Content>
                         <p>زيادة مدة السكت</p>
                     </Tooltip.Content>
-                  </Tooltip.Root>
+                </Tooltip.Root>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+import NumberInput from 'components/src/NumberInput.svelte'
+import {ar_nums} from 'components/src/util'
 import {onDestroy, onMount} from 'svelte'
 
-import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-import Button from '~/lib/components/ui/button/button.svelte'
+import * as Tooltip from '$lib/components/ui/tooltip/index.js'
 
 let {audio, part_start_input, part_end_input, save_settings, settings} = $props()
 
 let total_verses = $state(1)
 let current_start = $state(1)
 let current_end = $state(1)
-
+let all_reps = $state(1)
+let part_reps = $state(1)
+let delay_value = $state(0)
 let tooltipDelay = $state(200)
 let playback_rate = $state(1.0)
-let playback_interval
+let playback_interval = $state(null)
+let speed_display = $state(null)
+let current_part_reps = $state(0)
+let current_all_reps = $state(0)
+
+let current_start_display = $state('١')
+let current_end_display = $state('١')
+let all_reps_display = $state('١')
+let part_reps_display = $state('١')
+let delay_value_display = $state('٠')
 
 const int_bound = (int, min, max) => Math.max(Math.min(int, max), min)
 
 onMount(() => {
-    const saved_settings = settings
-
-    // Object.keys(saved_settings)
-    //     .filter(id => document.querySelector(`#${id}`))
-    //     .forEach(id => {
-    //         document.querySelector(`#${id}`).value = saved_settings[id]
-    //     })
+    const saved_settings = settings || {}
 
     if (audio && saved_settings['play-speed']) {
         audio.playbackRate = parseFloat(saved_settings['play-speed'])
         playback_rate = audio.playbackRate
     }
 
-    document.addEventListener('verses-loaded', handle_verses_loaded)
+    if (saved_settings['part-start']) {
+        current_start = parseInt(saved_settings['part-start'], 10) || 1
+        current_start_display = ar_nums(current_start.toString())
+    }
+
+    if (!saved_settings['part-end']) {
+        current_end = 1
+        current_end_display = ar_nums('١')
+    } else {
+        current_end = parseInt(saved_settings['part-end'], 10) || 1
+        current_end_display = ar_nums(current_end.toString())
+    }
+
+    if (saved_settings['all-reps']) {
+        all_reps = parseInt(saved_settings['all-reps'], 10) || 1
+        all_reps_display = ar_nums(all_reps.toString())
+    }
+
+    if (saved_settings['part-reps']) {
+        part_reps = parseInt(saved_settings['part-reps'], 10) || 1
+        part_reps_display = ar_nums(part_reps.toString())
+    }
+
+    if (saved_settings['delay']) {
+        delay_value = parseFloat(saved_settings['delay']) || 0
+        delay_value_display = ar_nums(delay_value.toString())
+    }
+
+    const versesLoadedHandler = e => {
+        if (e.detail && e.detail.total) {
+            total_verses = e.detail.total
+
+            current_end = total_verses
+            current_end_display = ar_nums(total_verses.toString())
+            save_settings('part-end', total_verses.toString())
+        }
+    }
+
+    window.addEventListener('verses-loaded', versesLoadedHandler)
+    window.addEventListener('verse-completed', handle_verse_completed)
+    setup_button_interactions()
+
+    const verseChangeHandler = e => {
+        if (!audio) return
+        const verse = e.detail.verse
+
+        if (!is_verse_in_range(verse)) {
+            audio.pause()
+            audio.currentTime = 0
+            current_all_reps = 0
+            current_part_reps = 0
+        }
+    }
+
+    window.addEventListener('verse-change', verseChangeHandler)
+
+    return () => {
+        window.removeEventListener('verses-loaded', versesLoadedHandler)
+        window.removeEventListener('verse-completed', handle_verse_completed)
+        if (audio) {
+            audio.removeEventListener('play', () => {})
+            audio.removeEventListener('pause', () => {})
+        }
+        window.removeEventListener('verse-change', verseChangeHandler)
+    }
 })
 
 onDestroy(() => {
     if (playback_interval) {
         clearInterval(playback_interval)
     }
-    document.removeEventListener('verses-loaded', handle_verses_loaded)
 })
-
-function handle_verses_loaded(e) {
-    if (e.detail && e.detail.total) {
-        total_verses = e.detail.total
-        current_end = total_verses
-
-        if (part_end_input) {
-            part_end_input.value = total_verses
-            part_end_input.max = total_verses
-        }
-    }
-}
 
 function handle_start_change(increase) {
     const new_value = int_bound(current_start + (increase ? 1 : -1), 1, total_verses)
     current_start = new_value
-
-    if (part_start_input) {
-        part_start_input.value = new_value
-    }
-
+    current_start_display = ar_nums(new_value.toString())
     save_settings('part-start', new_value.toString())
     notify_current_part_change(new_value)
 }
@@ -444,60 +542,28 @@ function handle_start_change(increase) {
 function handle_end_change(increase) {
     const new_value = int_bound(current_end + (increase ? 1 : -1), 1, total_verses)
     current_end = new_value
-
-    if (part_end_input) {
-        part_end_input.value = new_value
-    }
-
+    current_end_display = ar_nums(new_value.toString())
     save_settings('part-end', new_value.toString())
 }
 
-function handle_start_input_change(e) {
-    const input_value = parseInt(e.target.value, 10)
-
-    if (isNaN(input_value) || input_value < 1) {
-        current_start = 1
-        if (part_start_input) {
-            part_start_input.value = 1
-        }
-    } else if (input_value > total_verses) {
-        current_start = total_verses
-        if (part_start_input) {
-            part_start_input.value = total_verses
-        }
-    } else {
-        current_start = input_value
-    }
-
-    save_settings('part-start', current_start.toString())
-    notify_current_part_change(current_start)
+function handle_start_input_change(val) {
+    current_start = val
+    current_start_display = ar_nums(val.toString())
+    save_settings('part-start', val.toString())
+    notify_current_part_change(val)
 }
 
-function handle_end_input_change(e) {
-    const input_value = parseInt(e.target.value, 10)
-
-    if (isNaN(input_value) || input_value < 1) {
-        current_end = 1
-        if (part_end_input) {
-            part_end_input.value = 1
-        }
-    } else if (input_value > total_verses) {
-        current_end = total_verses
-        if (part_end_input) {
-            part_end_input.value = total_verses
-        }
-    } else {
-        current_end = input_value
-    }
-
-    save_settings('part-end', current_end.toString())
+function handle_end_input_change(val) {
+    current_end = val
+    current_end_display = ar_nums(val.toString())
+    save_settings('part-end', val.toString())
 }
 
 function notify_current_part_change(new_value) {
     const event = new CustomEvent('start-input-change', {
         detail: {value: new_value},
     })
-    document.dispatchEvent(event)
+    window.dispatchEvent(event)
 }
 
 function handle_button_action(e, action) {
@@ -508,9 +574,6 @@ function handle_button_action(e, action) {
         handle_speed_change(is_increase)
     } else if (action === 'skip') {
         handle_skip(is_increase)
-    } else if (action === 'spinner') {
-        const input = is_increase ? button.previousElementSibling : button.nextElementSibling
-        handle_rep_change(input, is_increase)
     }
 
     if (playback_interval) {
@@ -522,9 +585,6 @@ function handle_button_action(e, action) {
             handle_speed_change(is_increase)
         } else if (action === 'skip') {
             handle_skip(is_increase)
-        } else if (action === 'spinner') {
-            const input = is_increase ? button.previousElementSibling : button.nextElementSibling
-            handle_rep_change(input, is_increase)
         }
     }, 150)
 }
@@ -532,9 +592,6 @@ function handle_button_action(e, action) {
 function setup_button_interactions() {
     const speed_buttons = document.querySelectorAll('.speed')
     const skip_buttons = document.querySelectorAll('.skip')
-    const spinner_buttons = document.querySelectorAll(
-        '.spinner-cont .increase, .spinner-cont .decrease',
-    )
 
     speed_buttons.forEach(btn => {
         btn.addEventListener('mousedown', e => handle_button_action(e, 'speed'))
@@ -546,61 +603,14 @@ function setup_button_interactions() {
         btn.addEventListener('touchstart', e => handle_button_action(e, 'skip'))
     })
 
-    spinner_buttons.forEach(btn => {
-        btn.addEventListener('mousedown', () => {
-            const isIncrease = btn.classList.contains('increase')
-            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling
-
-            handle_rep_change(input, isIncrease)
-
-            if (playback_interval) {
-                clearInterval(playback_interval)
-            }
-
-            playback_interval = setInterval(() => {
-                handle_rep_change(input, isIncrease)
-            }, 150)
-        })
-
-        btn.addEventListener('touchstart', () => {
-            const isIncrease = btn.classList.contains('increase')
-            const input = isIncrease ? btn.previousElementSibling : btn.nextElementSibling
-
-            handle_rep_change(input, isIncrease)
-
-            if (playback_interval) {
-                clearInterval(playback_interval)
-            }
-
-            playback_interval = setInterval(() => {
-                handle_rep_change(input, isIncrease)
-            }, 150)
-        })
-    })
-
-    document.documentElement.addEventListener('mouseup', clear_action_interval)
-    document.documentElement.addEventListener('touchend', clear_action_interval)
-
-    const number_inputs = document.querySelectorAll('input[type="number"]')
-    number_inputs.forEach(input => {
-        input.addEventListener('keydown', handle_number_input_keydown)
-    })
+    window.addEventListener('mouseup', clear_action_interval)
+    window.addEventListener('touchend', clear_action_interval)
 }
 
 function clear_action_interval() {
     if (playback_interval) {
         clearInterval(playback_interval)
         playback_interval = null
-    }
-}
-
-function handle_number_input_keydown(e) {
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault()
-
-        handle_rep_change(e.target, e.key === 'ArrowUp')
-    } else if (e.key === '-') {
-        e.preventDefault()
     }
 }
 
@@ -611,7 +621,6 @@ function handle_speed_change(increase) {
     audio.playbackRate = new_rate
     playback_rate = new_rate
 
-    const speed_display = document.querySelector('#play-speed')
     if (speed_display) {
         const span = speed_display.querySelector('span')
         if (span) {
@@ -627,63 +636,89 @@ function handle_skip(increase) {
     audio.currentTime += 5 * (increase ? 1 : -1)
 }
 
-function handle_rep_change(el, increase) {
-    if (!el) {
-        return
-    }
+function handle_all_reps_change(increase) {
+    const new_value = int_bound(all_reps + (increase ? 1 : -1), 1, 10)
+    all_reps = new_value
+    all_reps_display = ar_nums(new_value.toString())
+    save_settings('all-reps', new_value.toString())
+}
 
-    const id = el.id
-    let val = el.value
+function handle_part_reps_change(increase) {
+    const new_value = int_bound(part_reps + (increase ? 1 : -1), 1, 10)
+    part_reps = new_value
+    part_reps_display = ar_nums(new_value.toString())
+    save_settings('part-reps', new_value.toString())
+}
 
-    if (el.type === 'number') {
-        val = parseInt(val, 10) || 1
-        val = val + (increase ? 1 : -1)
-
-        if (val < 1) {
-            val = 1
-        } else if (val > parseInt(el.max, 10)) {
-            val = parseInt(el.max, 10)
-        }
-    } else if (id.endsWith('-reps')) {
-        if (val === '∞') {
-            val = increase ? 1 : 10
-        } else {
-            val = parseInt(val, 10) + (increase ? 1 : -1)
-        }
-        if (val === 0 || val === 11) {
-            val = '∞'
-        }
-    } else if (id === 'delay') {
-        val = parseFloat(val.slice(0, -1)) + (increase ? 0.5 : -0.5)
-        if (val === 2.5) {
-            val = 2
-        } else if (val < 0) {
-            val = 0
-        }
-        val += 'x'
-    }
-
-    el.value = val
-
-    if (id === 'part-start') {
-        current_start = parseInt(val, 10)
-        notify_current_part_change(current_start)
-    } else if (id === 'part-end') {
-        current_end = parseInt(val, 10)
-    }
-
-    el.classList[el.validity.valid ? 'remove' : 'add']('invalid')
-    save_settings(id, val.toString())
+function handle_delay_change(increase) {
+    const new_value = int_bound(delay_value + (increase ? 1 : -1), 0, 5)
+    delay_value = new_value
+    delay_value_display = ar_nums(new_value.toString())
+    save_settings('delay', new_value.toString())
 }
 
 function handle_time_update() {
-    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        const event = new CustomEvent('timeupdate', {detail: audio})
-        document.dispatchEvent(event)
+    if (!audio) return
+
+    if (audio.currentTime >= audio.duration) {
+        audio.pause()
+
+        if (part_reps > 1 && current_part_reps < part_reps) {
+            current_part_reps++
+            audio.currentTime = 0
+            setTimeout(() => {
+                audio.play()
+            }, delay_value * 1000)
+        } else {
+            current_part_reps = 0
+            const event = new CustomEvent('verse-completed', {
+                detail: {current_verse: current_start},
+            })
+            window.dispatchEvent(event)
+        }
+        return
+    }
+
+    const event = new CustomEvent('timeupdate', {detail: audio})
+    window.dispatchEvent(event)
+}
+
+function handle_verse_completed(e) {
+    if (!audio) return
+
+    const current_verse = e.detail.current_verse
+
+    if (current_verse >= current_end) {
+        if (all_reps > 1 && current_all_reps < all_reps) {
+            current_all_reps++
+            current_start = 1
+            current_start_display = ar_nums('١')
+            save_settings('part-start', '1')
+
+            setTimeout(() => {
+                audio.currentTime = 0
+                audio.play()
+            }, delay_value * 1000)
+        } else {
+            current_all_reps = 0
+            current_part_reps = 0
+            audio.pause()
+            audio.currentTime = 0
+        }
+    } else {
+        current_start++
+        current_start_display = ar_nums(current_start.toString())
+        save_settings('part-start', current_start.toString())
+        setTimeout(() => {
+            audio.currentTime = 0
+            audio.play()
+        }, delay_value * 1000)
     }
 }
 
-onMount(setup_button_interactions)
+function is_verse_in_range(verse) {
+    return verse >= current_start && verse <= current_end
+}
 </script>
 
 <style>

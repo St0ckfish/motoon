@@ -1,6 +1,5 @@
 <div
     id="text"
-    bind:this={text_container_el}
     class="relative mb-6 min-h-64 rounded-lg bg-[#fefdfb] p-6 shadow-md transition-opacity duration-250"
     style="opacity: {opacity};"
 >
@@ -9,7 +8,7 @@
         bind:this={part_progress_el}
         class="absolute top-0 right-0 h-0.5 w-0 max-w-full bg-gradient-to-l from-[#eee] to-[#cacaca] transition-all duration-500"
     ></div>
-    <div id="tpl-cont" bind:this={tpl_cont_el} class="text-center">
+    <div id="tpl-cont" class="text-center">
         {#if content.type === 'title'}
             <div class="title">{@html content.title}</div>
             <div class="desc">{@html content.desc}</div>
@@ -31,11 +30,7 @@
 </div>
 
 <script>
-let {
-    text_container_el = $bindable(),
-    tpl_cont_el = $bindable(),
-    part_progress_el = $bindable(),
-} = $props()
+let {part_progress_el = $bindable()} = $props()
 
 let content = $state({
     type: 'title',
@@ -49,7 +44,10 @@ let content = $state({
 
 let opacity = $state(1)
 
-const ar_nums = s => ('' + s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'.slice(+d, +d + 1))
+function ar_nums(s) {
+    if (s === undefined || s === null) return ''
+    return ('' + s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'.charAt(+d))
+}
 
 export function setTitleContent(title, desc) {
     content = {
