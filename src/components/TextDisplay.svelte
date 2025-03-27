@@ -19,7 +19,7 @@
                     style="font-size: 2rem;"
                     class="-translate-y-7 [text-shadow:_0_4px_4px_rgb(0_0_0_/_0.5)]"
                 >
-                    {content.partNumber}
+                    {content.part_number}
                 </div>
                 <div class="first">{content.first}</div>
                 <div class="second">{content.second}</div>
@@ -39,7 +39,7 @@ let content = $state({
     first: '',
     second: '',
     sharh: '',
-    partNumber: '',
+    part_number: '',
 })
 
 let opacity = $state(1)
@@ -49,7 +49,7 @@ function ar_nums(s) {
     return ('' + s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'.charAt(+d))
 }
 
-export function setTitleContent(title, desc) {
+export function set_title_content(title, desc) {
     content = {
         type: 'title',
         title: title || '',
@@ -57,21 +57,21 @@ export function setTitleContent(title, desc) {
         first: '',
         second: '',
         sharh: '',
-        partNumber: '',
+        part_number: '',
     }
 }
 
-export function setBaytContent(parts, sharh, partNumber) {
+export function set_bayt_content(parts, sharh, part_number) {
     let first = ''
     let second = ''
 
     if (Array.isArray(parts)) {
         if (parts.length === 1) {
             if (parts[0].includes('،')) {
-                const splitParts = parts[0].split('،')
-                if (splitParts.length >= 2) {
-                    first = splitParts[0] + '،'
-                    second = splitParts.slice(1).join('،')
+                const split_parts = parts[0].split('،')
+                if (split_parts.length >= 2) {
+                    first = split_parts[0] + '،'
+                    second = split_parts.slice(1).join('،')
                 } else {
                     first = parts[0]
                     second = parts[0]
@@ -86,16 +86,16 @@ export function setBaytContent(parts, sharh, partNumber) {
         }
     } else if (parts) {
         if (parts.includes('=')) {
-            const splitParts = parts.split('=')
-            first = splitParts[0] || ''
-            second = splitParts[1] || ''
+            const split_parts = parts.split('=')
+            first = split_parts[0] || ''
+            second = split_parts[1] || ''
         } else if (parts.includes('،') || parts.includes('؛')) {
-            const splitChar = parts.includes('،') ? '،' : '؛'
-            const splitIndex = parts.indexOf(splitChar)
+            const split_char = parts.includes('،') ? '،' : '؛'
+            const split_index = parts.indexOf(split_char)
 
-            if (splitIndex > 0) {
-                first = parts.substring(0, splitIndex + 1)
-                second = parts.substring(splitIndex + 1)
+            if (split_index > 0) {
+                first = parts.substring(0, split_index + 1)
+                second = parts.substring(split_index + 1)
             } else {
                 first = parts
                 second = ''
@@ -113,11 +113,11 @@ export function setBaytContent(parts, sharh, partNumber) {
         first,
         second,
         sharh: sharh || '',
-        partNumber: ar_nums(partNumber || ''),
+        part_number: ar_nums(part_number || ''),
     }
 }
 
-export function setOpacity(value) {
+export function set_opacity(value) {
     opacity = value
 }
 </script>

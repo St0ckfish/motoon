@@ -6,9 +6,9 @@
         'z-50 overflow-hidden rounded-md border border-[#e1e3e6] bg-white px-3 py-1.5 text-sm text-black shadow-md',
         className,
     )}
-    {...$$restProps}
+    {...rest}
 >
-    <slot />
+    {@render children?.()}
 </TooltipPrimitive.Content>
 
 <script>
@@ -16,12 +16,25 @@ import {Tooltip as TooltipPrimitive} from 'bits-ui'
 
 import {cn, flyAndScale} from '$lib/utils.js'
 
-let className = undefined
-export let sideOffset = 4
-export let transition = flyAndScale
-export let transitionConfig = {
-    y: 8,
-    duration: 150,
-}
-export {className as class}
+/**
+ * @typedef {Object} Props
+ * @property {any} [class]
+ * @property {number} [sideOffset]
+ * @property {any} [transition]
+ * @property {any} [transitionConfig]
+ * @property {import('svelte').Snippet} [children]
+ */
+
+/** @type {Props & { [key: string]: any }} */
+let {
+    class: className = undefined,
+    sideOffset = 4,
+    transition = flyAndScale,
+    transitionConfig = {
+        y: 8,
+        duration: 150,
+    },
+    children,
+    ...rest
+} = $props()
 </script>

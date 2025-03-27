@@ -1,52 +1,26 @@
 <div class="relative mx-auto mb-6 max-w-10/12">
-    <Select selected={currentValue} onSelectedChange={handleChange}>
+    <Select selected={current_value} onSelectedChange={handle_change}>
         <SelectTrigger class="w-full rounded border border-gray-300 text-lg">
-            {#if currentValue}
-                <span>{currentValue}</span>
+            {#if current_value.value}
+                <span>{current_value.value}</span>
             {:else}
                 <span>اختر المتن</span>
             {/if}
         </SelectTrigger>
         <SelectContent position="popper" sideOffset={5} class="z-50 max-h-72 overflow-y-auto">
-            <SelectGroup>
-                <SelectLabel class="px-2 py-1 text-sm font-medium text-gray-500">متون</SelectLabel>
-                <SelectItem value="الأرجوزة الميئية">الأرجوزة الميئية</SelectItem>
-                <SelectItem value="الجزرية">الجزرية</SelectItem>
-                <SelectItem value="تحفة الأطفال">تحفة الأطفال</SelectItem>
-                <SelectItem value="نظم الآجرومية">نظم الآجرومية</SelectItem>
-                <SelectItem value="نظم الورقات">نظم الورقات</SelectItem>
-                <SelectItem value="الرحبية">الرحبية</SelectItem>
-                <SelectItem value="نظم المقصود">نظم المقصود</SelectItem>
-                <SelectItem value="مائة المعاني والبيان">مائة المعاني والبيان</SelectItem>
-            </SelectGroup>
-
-            <SelectSeparator class="my-1 h-px bg-gray-200" />
-
-            <SelectGroup>
-                <SelectLabel class="px-2 py-1 text-sm font-medium text-gray-500"
-                    >المعلقات</SelectLabel
-                >
-                <SelectItem value="معلقة امرئ القيس">معلقة امرئ القيس</SelectItem>
-                <SelectItem value="معلقة طرفة">معلقة طرفة</SelectItem>
-                <SelectItem value="معلقة زهير">معلقة زهير</SelectItem>
-                <SelectItem value="معلقة عمرو بن كلثوم">معلقة عمرو بن كلثوم</SelectItem>
-                <SelectItem value="معلقة عنترة">معلقة عنترة</SelectItem>
-                <SelectItem value="معلقة لبيد">معلقة لبيد</SelectItem>
-                <SelectItem value="معلقة الحارث">معلقة الحارث</SelectItem>
-                <SelectItem value="معلقة الأعشى">معلقة الأعشى</SelectItem>
-                <SelectItem value="معلقة النابغة">معلقة النابغة</SelectItem>
-                <SelectItem value="معلقة عبيد بن الأبرص">معلقة عبيد بن الأبرص</SelectItem>
-            </SelectGroup>
-
-            <SelectSeparator class="my-1 h-px bg-gray-200" />
-
-            <SelectGroup>
-                <SelectLabel class="px-2 py-1 text-sm font-medium text-gray-500"
-                    >عيون الشعر</SelectLabel
-                >
-                <SelectItem value="لامية العرب">لامية العرب</SelectItem>
-                <SelectItem value="البردة">البردة</SelectItem>
-            </SelectGroup>
+            {#each mutoon as group, i}
+                <SelectGroup>
+                    <SelectLabel class="px-2 py-1 text-sm font-medium text-gray-500"
+                        >{group.label}</SelectLabel
+                    >
+                    {#each group.items as item}
+                        <SelectItem value={item}>{item}</SelectItem>
+                    {/each}
+                </SelectGroup>
+                {#if i < mutoon.length - 1}
+                    <SelectSeparator class="my-1 h-px bg-gray-200" />
+                {/if}
+            {/each}
         </SelectContent>
     </Select>
 </div>
@@ -63,24 +37,25 @@ import {
     SelectSeparator,
     SelectTrigger,
 } from '../lib/components/ui/select'
+import {mutoon} from '../lib/data/mutoon.js'
 
 const {change} = $props()
-let currentValue = $state('الأرجوزة الميئية')
+let current_value = $state({value: 'الأرجوزة الميئية'})
 
-function createChangeEvent(value) {
-    const stringValue = value?.value || value?.toString?.() || value
+function create_change_event(value) {
+    const string_value = value?.value || value?.toString?.() || value
 
     return {
         target: {
-            value: stringValue,
+            value: string_value,
             selectedIndex: 0,
-            options: [{text: stringValue, value: stringValue}],
+            options: [{text: string_value, value: string_value}],
         },
         detail: {
             target: {
-                value: stringValue,
+                value: string_value,
                 selectedIndex: 0,
-                options: [{text: stringValue, value: stringValue}],
+                options: [{text: string_value, value: string_value}],
             },
         },
     }
@@ -90,28 +65,28 @@ onMount(() => {
     const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
 
     if (hash && hash.trim() !== '') {
-        currentValue = hash
-        handleChange(hash)
+        current_value = {value: hash}
+        handle_change(hash)
     } else {
-        handleChange('الأرجوزة الميئية')
+        handle_change('الأرجوزة الميئية')
     }
 })
 
-function handleChange(value) {
+function handle_change(value) {
     if (!value) return
 
-    const stringValue = value?.value || value?.toString?.() || value
+    const string_value = value?.value || value?.toString?.() || value
 
-    if (stringValue === currentValue && !change) return
+    if (string_value === current_value.value && !change) return
 
-    currentValue = stringValue
+    current_value = {value: string_value}
 
     if (change) {
-        const evt = createChangeEvent(stringValue)
+        const evt = create_change_event(string_value)
         change(evt)
 
         setTimeout(() => {
-            window.history.pushState(null, '', '#' + stringValue.replace(/\s+/g, '-'))
+            window.history.pushState(null, '', '#' + string_value.replace(/\s+/g, '-'))
         }, 100)
     }
 }

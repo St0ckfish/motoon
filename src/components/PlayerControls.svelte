@@ -13,7 +13,7 @@
 
     <div id="seek-btns" class="mb-8 flex flex-wrap items-center justify-center gap-2 font-sans">
         <div class="control-group mx-2 flex items-center rounded-full bg-white px-3 py-1 shadow">
-            <Tooltip.Root openDelay={tooltipDelay}>
+            <Tooltip.Root openDelay={tooltip_delay}>
                 <Tooltip.Trigger
                     class="speed increase rounded-full p-2 transition-colors hover:bg-gray-100"
                     aria-label="Increase speed"
@@ -94,7 +94,7 @@
                 </svg>
                 <p class="text-sm font-medium text-black">{playback_rate.toFixed(2)}x</p>
             </div>
-            <Tooltip.Root openDelay={tooltipDelay}>
+            <Tooltip.Root openDelay={tooltip_delay}>
                 <Tooltip.Trigger
                     class="speed decrease rounded-full p-2 transition-colors hover:bg-gray-100"
                     aria-label="Decrease speed"
@@ -116,7 +116,7 @@
         </div>
 
         <div class="control-group mx-4 flex items-center rounded-full bg-white px-3 py-1 shadow">
-            <Tooltip.Root openDelay={tooltipDelay}>
+            <Tooltip.Root openDelay={tooltip_delay}>
                 <Tooltip.Trigger
                     class="skip increase rounded-full p-2 transition-colors hover:bg-gray-100"
                     aria-label="Skip forward 5 seconds"
@@ -137,7 +137,7 @@
             </Tooltip.Root>
 
             <p class="z-50 mx-2 text-sm font-medium text-black">5s</p>
-            <Tooltip.Root openDelay={tooltipDelay}>
+            <Tooltip.Root openDelay={tooltip_delay}>
                 <Tooltip.Trigger
                     class="skip decrease rounded-full p-2 transition-colors hover:bg-gray-100"
                     aria-label="Skip backward 5 seconds"
@@ -166,7 +166,7 @@
                 <div class="mb-5 flex items-center justify-between">
                     <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">من</p>
                     <div class="flex">
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 aria-label="Decrease start"
@@ -179,7 +179,7 @@
                             </Tooltip.Content>
                         </Tooltip.Root>
                         <NumberInput
-                            id="part-start"
+                            id="part_start"
                             value={current_start}
                             display_value={current_start_display}
                             min={1}
@@ -188,7 +188,7 @@
                             class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                             bind:this={part_start_input}
                         />
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 aria-label="Increase start"
@@ -205,7 +205,7 @@
                 <div class="flex items-center justify-between">
                     <p class="katab ml-3 text-sm font-medium text-gray-600 sm:text-lg">إلى</p>
                     <div class="flex">
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 aria-label="Decrease end"
@@ -219,7 +219,7 @@
                         </Tooltip.Root>
 
                         <NumberInput
-                            id="part-end"
+                            id="part_end"
                             value={current_end}
                             display_value={current_end_display}
                             min={1}
@@ -228,7 +228,7 @@
                             class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                             bind:this={part_end_input}
                         />
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 aria-label="Increase end"
@@ -268,7 +268,7 @@
                         <span class="katab text-sm text-gray-600 sm:text-lg">كامل</span>
                     </div>
                     <div class="mr-auto flex items-center">
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 onclick={() => handle_all_reps_change(false)}
@@ -280,7 +280,7 @@
                             </Tooltip.Content>
                         </Tooltip.Root>
                         <NumberInput
-                            id="all-reps"
+                            id="all_reps"
                             value={all_reps}
                             display_value={all_reps_display}
                             min={1}
@@ -288,11 +288,11 @@
                             oninput={val => {
                                 all_reps = val
                                 all_reps_display = ar_nums(val.toString())
-                                save_settings('all-reps', val.toString())
+                                save_settings('all_reps', val.toString())
                             }}
                             class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                         />
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 onclick={() => handle_all_reps_change(true)}
@@ -327,7 +327,7 @@
                         <span class="katab text-sm text-gray-600 sm:text-lg">مقطع</span>
                     </div>
                     <div class="mr-auto flex items-center">
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 onclick={() => handle_part_reps_change(false)}
@@ -339,7 +339,7 @@
                             </Tooltip.Content>
                         </Tooltip.Root>
                         <NumberInput
-                            id="part-reps"
+                            id="part_reps"
                             value={part_reps}
                             display_value={part_reps_display}
                             min={1}
@@ -347,11 +347,11 @@
                             oninput={val => {
                                 part_reps = val
                                 part_reps_display = ar_nums(val.toString())
-                                save_settings('part-reps', val.toString())
+                                save_settings('part_reps', val.toString())
                             }}
                             class="mx-2 w-16 shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none max-[1235px]:w-8 max-[1000px]:w-16"
                         />
-                        <Tooltip.Root openDelay={tooltipDelay}>
+                        <Tooltip.Root openDelay={tooltip_delay}>
                             <Tooltip.Trigger
                                 class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                                 onclick={() => handle_part_reps_change(true)}
@@ -382,7 +382,7 @@
                 <span class="katab mr-2">السكت</span>
             </h3>
             <div class="flex items-center justify-center">
-                <Tooltip.Root openDelay={tooltipDelay}>
+                <Tooltip.Root openDelay={tooltip_delay}>
                     <Tooltip.Trigger
                         class="decrease flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                         onclick={() => handle_delay_change(false)}>–</Tooltip.Trigger
@@ -404,7 +404,7 @@
                     }}
                     class="mx-2 w-16 border-none shadow-inner focus:ring-2 focus:ring-blue-300 focus:outline-none"
                 />
-                <Tooltip.Root openDelay={tooltipDelay}>
+                <Tooltip.Root openDelay={tooltip_delay}>
                     <Tooltip.Trigger
                         class="increase flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-lg text-black shadow-sm transition-colors hover:bg-gray-200"
                         onclick={() => handle_delay_change(true)}
@@ -427,102 +427,100 @@ import {onDestroy, onMount} from 'svelte'
 
 import * as Tooltip from '$lib/components/ui/tooltip/index.js'
 
-let {audio, part_start_input, part_end_input, save_settings, settings} = $props()
+let {
+    audio,
+    part_start_input,
+    part_end_input,
+    save_settings,
+    settings,
+    on_start_change,
+    total_verses_prop = 1,
+    current_verse = 1,
+    on_time_update,
+} = $props()
 
-let total_verses = $state(1)
+let total_verses = $state(total_verses_prop)
 let current_start = $state(1)
-let current_end = $state(1)
+let current_end = $state(total_verses)
 let all_reps = $state(1)
 let part_reps = $state(1)
 let delay_value = $state(0)
-let tooltipDelay = $state(200)
+let tooltip_delay = $state(200)
 let playback_rate = $state(1.0)
 let playback_interval = $state(null)
-let speed_display = $state(null)
 let current_part_reps = $state(0)
 let current_all_reps = $state(0)
 
 let current_start_display = $state('١')
-let current_end_display = $state('١')
+let current_end_display = $state(ar_nums(total_verses.toString()))
 let all_reps_display = $state('١')
 let part_reps_display = $state('١')
 let delay_value_display = $state('٠')
 
+$effect(() => {
+    if (settings) {
+        update_settings_from_parent(settings)
+    }
+})
+
+$effect(() => {
+    if (total_verses_prop !== total_verses) {
+        total_verses = total_verses_prop
+        current_end = total_verses
+        current_end_display = ar_nums(total_verses.toString())
+    }
+})
+
+$effect(() => {
+    if (current_verse > 0) {
+        is_verse_in_range(current_verse)
+    }
+})
+
 const int_bound = (int, min, max) => Math.max(Math.min(int, max), min)
 
-onMount(() => {
-    const saved_settings = settings || {}
+function update_settings_from_parent(settings_obj) {
+    if (!settings_obj) return
 
-    if (audio && saved_settings['play-speed']) {
-        audio.playbackRate = parseFloat(saved_settings['play-speed'])
-        playback_rate = audio.playbackRate
-    }
-
-    if (saved_settings['part-start']) {
-        current_start = parseInt(saved_settings['part-start'], 10) || 1
-        current_start_display = ar_nums(current_start.toString())
-    }
-
-    if (!saved_settings['part-end']) {
-        current_end = 1
-        current_end_display = ar_nums('١')
-    } else {
-        current_end = parseInt(saved_settings['part-end'], 10) || 1
-        current_end_display = ar_nums(current_end.toString())
-    }
-
-    if (saved_settings['all-reps']) {
-        all_reps = parseInt(saved_settings['all-reps'], 10) || 1
-        all_reps_display = ar_nums(all_reps.toString())
-    }
-
-    if (saved_settings['part-reps']) {
-        part_reps = parseInt(saved_settings['part-reps'], 10) || 1
-        part_reps_display = ar_nums(part_reps.toString())
-    }
-
-    if (saved_settings['delay']) {
-        delay_value = parseFloat(saved_settings['delay']) || 0
-        delay_value_display = ar_nums(delay_value.toString())
-    }
-
-    const versesLoadedHandler = e => {
-        if (e.detail && e.detail.total) {
-            total_verses = e.detail.total
-
-            current_end = total_verses
-            current_end_display = ar_nums(total_verses.toString())
-            save_settings('part-end', total_verses.toString())
+    if (settings_obj['play_speed']) {
+        const speed = parseFloat(settings_obj['play_speed'])
+        playback_rate = speed
+        if (audio) {
+            audio.playbackRate = speed
         }
     }
 
-    window.addEventListener('verses-loaded', versesLoadedHandler)
-    window.addEventListener('verse-completed', handle_verse_completed)
+    if (settings_obj['all_reps']) {
+        const reps = parseInt(settings_obj['all_reps'], 10) || 1
+        all_reps = reps
+        all_reps_display = ar_nums(reps.toString())
+    }
+
+    if (settings_obj['part_reps']) {
+        const reps = parseInt(settings_obj['part_reps'], 10) || 1
+        part_reps = reps
+        part_reps_display = ar_nums(reps.toString())
+    }
+
+    if (settings_obj['delay']) {
+        const delay = parseFloat(settings_obj['delay']) || 0
+        delay_value = delay
+        delay_value_display = ar_nums(delay.toString())
+    }
+
+    current_start = 1
+    current_start_display = ar_nums('١')
+
+    current_end = total_verses
+    current_end_display = ar_nums(total_verses.toString())
+}
+
+onMount(() => {
+    update_settings_from_parent(settings)
     setup_button_interactions()
 
-    const verseChangeHandler = e => {
-        if (!audio) return
-        const verse = e.detail.verse
-
-        if (!is_verse_in_range(verse)) {
-            audio.pause()
-            audio.currentTime = 0
-            current_all_reps = 0
-            current_part_reps = 0
-        }
-    }
-
-    window.addEventListener('verse-change', verseChangeHandler)
-
-    return () => {
-        window.removeEventListener('verses-loaded', versesLoadedHandler)
-        window.removeEventListener('verse-completed', handle_verse_completed)
-        if (audio) {
-            audio.removeEventListener('play', () => {})
-            audio.removeEventListener('pause', () => {})
-        }
-        window.removeEventListener('verse-change', verseChangeHandler)
-    }
+    current_end = total_verses
+    current_end_display = ar_nums(total_verses.toString())
 })
 
 onDestroy(() => {
@@ -535,7 +533,6 @@ function handle_start_change(increase) {
     const new_value = int_bound(current_start + (increase ? 1 : -1), 1, total_verses)
     current_start = new_value
     current_start_display = ar_nums(new_value.toString())
-    save_settings('part-start', new_value.toString())
     notify_current_part_change(new_value)
 }
 
@@ -543,27 +540,24 @@ function handle_end_change(increase) {
     const new_value = int_bound(current_end + (increase ? 1 : -1), 1, total_verses)
     current_end = new_value
     current_end_display = ar_nums(new_value.toString())
-    save_settings('part-end', new_value.toString())
 }
 
 function handle_start_input_change(val) {
     current_start = val
     current_start_display = ar_nums(val.toString())
-    save_settings('part-start', val.toString())
     notify_current_part_change(val)
 }
 
 function handle_end_input_change(val) {
-    current_end = val
-    current_end_display = ar_nums(val.toString())
-    save_settings('part-end', val.toString())
+    const validated_val = Math.min(val, total_verses)
+    current_end = validated_val
+    current_end_display = ar_nums(validated_val.toString())
 }
 
 function notify_current_part_change(new_value) {
-    const event = new CustomEvent('start-input-change', {
-        detail: {value: new_value},
-    })
-    window.dispatchEvent(event)
+    if (on_start_change) {
+        on_start_change({detail: {value: new_value}})
+    }
 }
 
 function handle_button_action(e, action) {
@@ -621,14 +615,7 @@ function handle_speed_change(increase) {
     audio.playbackRate = new_rate
     playback_rate = new_rate
 
-    if (speed_display) {
-        const span = speed_display.querySelector('span')
-        if (span) {
-            span.textContent = new_rate.toFixed(2) + 'x'
-        }
-    }
-
-    save_settings('play-speed', new_rate.toString())
+    save_settings('play_speed', new_rate.toFixed(2))
 }
 
 function handle_skip(increase) {
@@ -640,14 +627,20 @@ function handle_all_reps_change(increase) {
     const new_value = int_bound(all_reps + (increase ? 1 : -1), 1, 10)
     all_reps = new_value
     all_reps_display = ar_nums(new_value.toString())
-    save_settings('all-reps', new_value.toString())
+    if (part_start_input) {
+        part_start_input.value = new_value
+    }
+    save_settings('all_reps', new_value.toString())
 }
 
 function handle_part_reps_change(increase) {
     const new_value = int_bound(part_reps + (increase ? 1 : -1), 1, 10)
     part_reps = new_value
     part_reps_display = ar_nums(new_value.toString())
-    save_settings('part-reps', new_value.toString())
+    if (part_end_input) {
+        part_end_input.value = new_value
+    }
+    save_settings('part_reps', new_value.toString())
 }
 
 function handle_delay_change(increase) {
@@ -660,27 +653,25 @@ function handle_delay_change(increase) {
 function handle_time_update() {
     if (!audio) return
 
-    if (audio.currentTime >= audio.duration) {
+    if (audio.currentTime >= audio.duration - 0.2) {
         audio.pause()
 
-        if (part_reps > 1 && current_part_reps < part_reps) {
+        if (part_reps > 1 && current_part_reps < part_reps - 1) {
             current_part_reps++
-            audio.currentTime = 0
             setTimeout(() => {
+                audio.currentTime = 0
                 audio.play()
             }, delay_value * 1000)
         } else {
             current_part_reps = 0
-            const event = new CustomEvent('verse-completed', {
-                detail: {current_verse: current_start},
-            })
-            window.dispatchEvent(event)
+            handle_verse_completed({detail: {current_verse: current_start}})
         }
         return
     }
 
-    const event = new CustomEvent('timeupdate', {detail: audio})
-    window.dispatchEvent(event)
+    if (on_time_update) {
+        on_time_update(audio)
+    }
 }
 
 function handle_verse_completed(e) {
@@ -689,11 +680,12 @@ function handle_verse_completed(e) {
     const current_verse = e.detail.current_verse
 
     if (current_verse >= current_end) {
-        if (all_reps > 1 && current_all_reps < all_reps) {
+        if (all_reps > 1 && current_all_reps < all_reps - 1) {
             current_all_reps++
             current_start = 1
             current_start_display = ar_nums('١')
-            save_settings('part-start', '1')
+
+            notify_current_part_change(1)
 
             setTimeout(() => {
                 audio.currentTime = 0
@@ -706,9 +698,12 @@ function handle_verse_completed(e) {
             audio.currentTime = 0
         }
     } else {
-        current_start++
-        current_start_display = ar_nums(current_start.toString())
-        save_settings('part-start', current_start.toString())
+        const next_verse = current_verse + 1
+        current_start = next_verse
+        current_start_display = ar_nums(next_verse.toString())
+
+        notify_current_part_change(next_verse)
+
         setTimeout(() => {
             audio.currentTime = 0
             audio.play()
@@ -717,7 +712,14 @@ function handle_verse_completed(e) {
 }
 
 function is_verse_in_range(verse) {
-    return verse >= current_start && verse <= current_end
+    const in_range = verse >= current_start && verse <= current_end
+    if (!in_range && audio) {
+        audio.pause()
+        audio.currentTime = 0
+        current_all_reps = 0
+        current_part_reps = 0
+    }
+    return in_range
 }
 </script>
 

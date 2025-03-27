@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>{`${matnName} | مقرئ المتون`}</title>
+    <title>{`${matn_name} | مقرئ المتون`}</title>
 </svelte:head>
 
 <main class="rtl container mx-auto max-w-4xl px-4 py-6">
@@ -12,7 +12,7 @@
 
     <MatnSelector change={handle_matn_change} />
 
-    <TextDisplay bind:this={textDisplay} bind:part_progress_el />
+    <TextDisplay bind:this={text_display} bind:part_progress_el />
 
     <PlayerControls
         bind:audio
@@ -20,12 +20,30 @@
         bind:part_end_input
         {save_settings}
         {settings}
+        on_start_change={handle_start_change}
+        total_verses_prop={main_state.segs
+            ? main_state.segs.length > 0 && main_state.segs[0][1] === main_state.title
+                ? main_state.segs.length - 1
+                : main_state.segs.length
+            : 1}
+        current_verse={main_state.cur + 1}
+        on_time_update={handle_audio_time_update}
     />
+
+    <div class="mb-4 flex justify-center">
+        <button
+            class="cursor-pointer text-black transition-colors hover:underline"
+            onclick={reset_settings}
+        >
+            إعادة تعيين الإعدادات
+        </button>
+    </div>
 
     <Footer />
 </main>
 
 <script>
+import * as kv from 'idb-keyval'
 import {onDestroy, onMount} from 'svelte'
 
 import Footer from '../components/Footer.svelte'
@@ -39,80 +57,75 @@ let main_state = $state({
     cur: 0,
     segs: [],
     title: [],
-    isFirstPlay: true,
+    is_first_play: true,
 })
 
-let settings = $state(JSON.parse(localStorage.getItem('settings') || '{}'))
+let settings = $state({
+    play_speed: '1.0',
+    all_reps: '1',
+    part_reps: '1',
+    delay: '0',
+    part_start: '1',
+    part_end: '1',
+})
 
-let matnName = $state('')
+let matn_name = $state('')
 let audio = $state(null)
-let clicker = $state(null)
-let textDisplay = $state(null)
+let text_display = $state(null)
 
 let part_start_input = $state(null)
 let part_end_input = $state(null)
 let part_progress_el = $state(null)
-let delay_input = $state(null)
-let part_reps_input = $state(null)
-let all_reps_input = $state(null)
+let settings_loaded = $state(false)
 
 onMount(() => {
-    clicker = new Audio('click.mp3')
-
-    const timeUpdateHandler = e => {
-        if (e.detail) {
-            handle_time_update(e.detail)
-        }
-    }
-
-    const startInputChangeHandler = e => {
-        if (e.detail && e.detail.value) {
-            main_state.cur = e.detail.value - 1
-            main_state.part_reps = 1
-
-            load_part()
-
-            if (audio && main_state.segs && main_state.segs[main_state.cur]) {
-                audio.currentTime = main_state.segs[main_state.cur][0]
-            }
-        }
-    }
-
-    window.addEventListener('timeupdate', timeUpdateHandler)
-    window.addEventListener('start-input-change', startInputChangeHandler)
-
     const hash = decodeURI(location.hash.slice(1)).replace(/-/g, ' ')
     if (hash) {
         const select = document.querySelector('select')
         if (select) {
-            const option = Array.from(select.options).find(opt => opt.value === hash)
+            const option = [...select.options].find(opt => opt.value === hash)
             if (option) {
                 load_matn(option.text, hash)
             }
         }
     }
+})
 
-    return () => {
-        window.removeEventListener('timeupdate', timeUpdateHandler)
-        window.removeEventListener('start-input-change', startInputChangeHandler)
+onMount(async () => {
+    const stored_settings = await kv.get('settings')
+    if (stored_settings) {
+        settings = {
+            play_speed: String(stored_settings['play_speed'] || '1.0'),
+            all_reps: String(stored_settings['all_reps'] || '1'),
+            part_reps: String(stored_settings['part_reps'] || '1'),
+            delay: String(stored_settings['delay'] || '0'),
+            part_start: String(stored_settings['part_start'] || '1'),
+            part_end: String(stored_settings['part_end'] || '1'),
+        }
+
+        if (audio) {
+            audio.playbackRate = parseFloat(settings['play_speed'])
+        }
+
+        settings_loaded = true
     }
 })
 
-async function load_matn(matn_name, matnId) {
-    if (!matnId) {
+async function load_matn(input_matn_name, matn_id) {
+    if (!matn_id) {
         show_error('خطأ في تحميل المتن', 'معرّف المتن غير صالح')
         return
     }
 
-    const encoded_matnId = encodeURIComponent(matnId)
+    const encoded_matn_id = encodeURIComponent(matn_id)
 
     try {
-        if (textDisplay) {
-            textDisplay.setOpacity(0.5)
+        if (text_display) {
+            text_display.set_opacity(0.5)
         }
 
-        const cacheParam = `?t=${Date.now()}`
-        const response = await fetch(`/data/${encoded_matnId}.txt${cacheParam}`, {
+        const cache_param = `?t=${Date.now()}`
+        const response = await fetch(`/data/${encoded_matn_id}.txt${cache_param}`, {
             cache: 'no-cache',
             headers: {
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -143,10 +156,10 @@ async function load_matn(matn_name, matnId) {
             return
         }
 
-        const audioUrl = lines[0].trim()
+        const audio_url = lines[0].trim()
         const segments = []
-        let currentTitle = matn_name
-        matnName = matn_name
+        let current_title = input_matn_name
+        matn_name = input_matn_name
 
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim()
@@ -174,7 +187,7 @@ async function load_matn(matn_name, matnId) {
                     })
 
                     if (timing === 0) {
-                        currentTitle = text
+                        current_title = text
                     }
 
                     i = j - 1
@@ -187,8 +200,6 @@ async function load_matn(matn_name, matnId) {
             return
         }
 
-        const oldPlaybackRate = audio ? audio.playbackRate : 1
-
         if (!audio) {
             audio = document.querySelector('audio')
             if (!audio) {
@@ -197,10 +208,10 @@ async function load_matn(matn_name, matnId) {
             }
         }
 
-        audio.src = audioUrl
-        audio.playbackRate = oldPlaybackRate
+        audio.src = audio_url
+        audio.playbackRate = parseFloat(settings['play_speed'] || '1.0')
 
-        main_state.title = currentTitle
+        main_state.title = current_title
         main_state.segs = segments.map(seg => {
             let text = seg.text
             if (text && !text.includes('=') && (text.includes('،') || text.includes('؛'))) {
@@ -213,26 +224,42 @@ async function load_matn(matn_name, matnId) {
             return [seg.timing, text, seg.description]
         })
 
-        history.replaceState(null, '#' + matnId.replaceAll(' ', '-'))
+        history.replaceState(null, '#' + matn_id.replaceAll(' ', '-'))
 
         const total_verses =
-            main_state.segs.length > 0 && main_state.segs[0][1] === currentTitle
+            main_state.segs.length > 0 && main_state.segs[0][1] === current_title
                 ? main_state.segs.length - 1
                 : main_state.segs.length
 
-        dispatch_verses_loaded_event(total_verses)
-
         if (part_start_input && part_end_input) {
             part_start_input.value = 1
-            const maxValue = total_verses
-            part_start_input.max = maxValue
-            part_end_input.max = maxValue
-            part_end_input.value = maxValue
+            const max_value = total_verses
+            part_start_input.max = max_value
+            part_end_input.max = max_value
+
+            const start_value =
+                settings_loaded && settings['part_start'] ? parseInt(settings['part_start'], 10) : 1
+            const end_value =
+                settings_loaded && settings['part_end']
+                    ? parseInt(settings['part_end'], 10)
+                    : max_value
+
+            const validated_start = Math.max(1, Math.min(start_value, max_value))
+            const validated_end = Math.max(validated_start, Math.min(end_value, max_value))
+
+            part_start_input.value = validated_start
+            part_end_input.value = validated_end
             part_start_input.min = 1
             part_end_input.min = 1
 
-            save_settings('part-start', 1)
-            save_settings('part-end', maxValue)
+            settings = {
+                ...settings,
+                part_start: String(validated_start),
+                part_end: String(validated_end),
+            }
+
+            save_settings('part_start', validated_start)
+            save_settings('part_end', validated_end)
 
             reset_state()
         } else {
@@ -244,17 +271,10 @@ async function load_matn(matn_name, matnId) {
 }
 
 function show_error(title, message) {
-    if (textDisplay) {
-        textDisplay.setOpacity(1)
-        textDisplay.setTitleContent(title, message)
+    if (text_display) {
+        text_display.set_opacity(1)
+        text_display.set_title_content(title, message)
     }
-}
-
-function dispatch_verses_loaded_event(total) {
-    const event = new CustomEvent('verses-loaded', {
-        detail: {total: total},
-    })
-    window.dispatchEvent(event)
 }
 
 onDestroy(() => {
@@ -265,12 +285,33 @@ onDestroy(() => {
 })
 
 function save_settings(id, value) {
-    settings = {...settings, [id]: value}
-    // localStorage.setItem('settings', JSON.stringify(settings))
+    if (['play_speed', 'all_reps', 'part_reps', 'delay', 'part_start', 'part_end'].includes(id)) {
+        const string_value = String(value)
+        settings = {...settings, [id]: string_value}
+    }
+}
+
+function reset_settings() {
+    const default_settings = {
+        play_speed: '1.0',
+        all_reps: '1',
+        part_reps: '1',
+        delay: '0',
+        part_start: '1',
+        part_end: settings.part_end || '1',
+    }
+
+    settings = default_settings
+
+    kv.set('settings', default_settings).then(() => {
+        if (audio) {
+            audio.playbackRate = parseFloat(default_settings['play_speed'])
+        }
+    })
 }
 
 function load_part() {
-    if (!textDisplay || !main_state.segs || main_state.segs.length === 0) {
+    if (!text_display || !main_state.segs || main_state.segs.length === 0) {
         return
     }
 
@@ -279,21 +320,20 @@ function load_part() {
         return
     }
 
-    textDisplay.setOpacity(0)
+    text_display.set_opacity(0)
 
     setTimeout(() => {
         try {
             if (main_state.cur === 0) {
-                let titleText = main_state.title
-                if (!titleText || (Array.isArray(titleText) && titleText.length === 0)) {
-                    titleText = cur[1]
+                let title_text = main_state.title
+                if (!title_text || (Array.isArray(title_text) && title_text.length === 0)) {
+                    title_text = cur[1]
                 }
-                let descText = cur[2] || ''
-                // Pass HTML content directly to the title content
-                textDisplay.setTitleContent(titleText, descText)
+                let desc_text = cur[2] || ''
+                text_display.set_title_content(title_text, desc_text)
             } else if (cur[1] && cur[1].includes('=')) {
                 const parts = cur[1].split('=')
-                textDisplay.setBaytContent(parts, cur[2] || '', main_state.cur)
+                text_display.set_bayt_content(parts, cur[2] || '', main_state.cur)
             } else if (cur[1] && (cur[1].includes('،') || cur[1].includes('؛'))) {
                 const split_char = cur[1].includes('،') ? '،' : '؛'
                 const split_index = cur[1].indexOf(split_char)
@@ -303,20 +343,20 @@ function load_part() {
                         cur[1].substring(0, split_index + 1),
                         cur[1].substring(split_index + 1),
                     ]
-                    textDisplay.setBaytContent(parts, cur[2] || '', main_state.cur)
+                    text_display.set_bayt_content(parts, cur[2] || '', main_state.cur)
                 } else {
-                    textDisplay.setTitleContent(cur[1], cur[2] || '')
+                    text_display.set_title_content(cur[1], cur[2] || '')
                 }
             } else {
                 if (cur[1]) {
-                    textDisplay.setTitleContent(cur[1], cur[2] || '')
+                    text_display.set_title_content(cur[1], cur[2] || '')
                 }
             }
 
-            textDisplay.setOpacity(1)
+            text_display.set_opacity(1)
         } catch {
-            textDisplay.setTitleContent('خطأ في عرض المحتوى', 'يرجى المحاولة مرة أخرى')
-            textDisplay.setOpacity(1)
+            text_display.set_title_content('خطأ في عرض المحتوى', 'يرجى المحاولة مرة أخرى')
+            text_display.set_opacity(1)
         }
     }, 250)
 
@@ -334,84 +374,69 @@ function part_done() {
         main_state.cur === 0 &&
         part_end_input?.value === '1' &&
         main_state.segs.length > 1 &&
-        main_state.isFirstPlay
+        main_state.is_first_play
     ) {
         part_end_input.value = main_state.segs.length
-        main_state.isFirstPlay = false
+        main_state.is_first_play = false
     }
 
-    const delayValue = delay_input?.value || '0x'
-    const partRepsValue = part_reps_input?.value || '1'
-    const partEndValue = part_end_input?.value || String(main_state.segs.length)
-    const allRepsValue = all_reps_input?.value || '1'
+    const delay_value = settings['delay'] || '0'
+    const part_reps_value = settings['part_reps'] || '1'
+    const part_end_value = settings['part_end'] || String(main_state.segs.length)
+    const all_reps_value = settings['all_reps'] || '1'
 
-    let lastDur =
-        main_state.cur + 1 < main_state.segs.length
-            ? main_state.segs[main_state.cur + 1][0] - main_state.segs[main_state.cur][0]
-            : 5
+    const delay_time = parseFloat(delay_value) * 1000
+    const part_reps_val = parseInt(part_reps_value, 10)
+    const part_end_val = parseInt(part_end_value, 10)
+    const all_reps_val = parseInt(all_reps_value, 10)
 
-    let delayTime = +delayValue.slice(0, -1) * lastDur * 1000
-    let partRepsVal = +partRepsValue
-    let partEndVal = +partEndValue
+    const is_at_last_part = main_state.cur >= part_end_val - 1
+    const has_completed_part_reps = main_state.part_reps >= part_reps_val
+    const has_completed_all_reps = main_state.all_reps >= all_reps_val
 
-    const isAtLastPart = main_state.cur + 1 >= partEndVal
-    const hasCompletedPartReps = main_state.part_reps >= partRepsVal
-    const hasCompletedAllReps = main_state.all_reps >= +allRepsValue
-    const shouldResetState = isAtLastPart && hasCompletedPartReps && hasCompletedAllReps
-
-    if (shouldResetState) {
+    if (is_at_last_part && has_completed_part_reps && has_completed_all_reps) {
         audio.pause()
         reset_state()
         return
     }
 
-    if (main_state.part_reps >= partRepsVal) {
-        main_state.part_reps = 1
-        main_state.cur++
-    } else {
+    if (main_state.part_reps < part_reps_val) {
         main_state.part_reps++
+        audio.pause()
+
+        setTimeout(() => {
+            audio.currentTime = main_state.segs[main_state.cur][0]
+            audio.play()
+        }, delay_time)
+
+        return
     }
 
-    if (main_state.cur + 1 > partEndVal) {
-        audio.pause()
-        if (allRepsValue > 1 && main_state.all_reps < +allRepsValue) {
-            main_state.cur = part_start_input ? +part_start_input.value - 1 : 0
+    main_state.part_reps = 1
+    main_state.cur++
+
+    if (main_state.cur >= part_end_val) {
+        if (all_reps_val > 1 && main_state.all_reps < all_reps_val) {
+            audio.pause()
+            main_state.cur = parseInt(settings['part_start'], 10) - 1 || 0
             main_state.all_reps++
 
-            if (clicker) {
-                clicker.volume = 0.75
-                clicker.play()
-            }
-
-            delayTime = delayTime || 750
+            setTimeout(() => {
+                load_part()
+                audio.play()
+            }, delay_time || 750)
         } else {
+            audio.pause()
             reset_state()
-            return
         }
+        return
     }
 
-    if (delayTime) {
-        audio.pause()
-    }
-
+    audio.pause()
     setTimeout(() => {
         load_part()
-        if (audio && audio.paused) {
-            const playPromise = audio.play()
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    window.addEventListener(
-                        'click',
-                        function resumeAudio() {
-                            audio.play()
-                            window.removeEventListener('click', resumeAudio)
-                        },
-                        {once: true},
-                    )
-                })
-            }
-        }
-    }, delayTime || 0)
+        audio.play()
+    }, delay_time)
 }
 
 function reset_state() {
@@ -425,7 +450,9 @@ function reset_state() {
 
     main_state.all_reps = 1
     main_state.part_reps = 1
-    main_state.cur = 0
+
+    const start_value = settings['part_start'] ? parseInt(settings['part_start'], 10) : 1
+    main_state.cur = Math.max(0, start_value - 1)
 
     if (audio) {
         audio.currentTime = 0
@@ -435,35 +462,12 @@ function reset_state() {
     load_part()
 }
 
-function seek(dir) {
-    if (!audio || !main_state.segs || main_state.segs.length === 0) return
-
-    audio.pause()
-
-    if (dir === 1) {
-        for (
-            ;
-            main_state.cur < main_state.segs.length - 1 &&
-            audio.currentTime > main_state.segs[main_state.cur][0];
-            main_state.cur++
-        );
-        main_state.cur--
-    } else {
-        for (
-            ;
-            main_state.cur > 0 && audio.currentTime < main_state.segs[main_state.cur][0];
-            main_state.cur--
-        );
-    }
-
-    audio.currentTime = main_state.segs[main_state.cur][0]
-
-    load_part()
-    audio.play()
+function handle_time_update(audio_el) {
+    handle_audio_time_update(audio_el)
 }
 
-function handle_time_update(audioEl) {
-    if (!audioEl || audioEl.paused) return
+function handle_audio_time_update(audio_el) {
+    if (!audio_el || audio_el.paused) return
 
     if (!part_progress_el) {
         return
@@ -471,39 +475,73 @@ function handle_time_update(audioEl) {
 
     if (!main_state.segs || main_state.segs.length === 0 || !main_state.segs[main_state.cur]) return
 
-    let curTime = audioEl.currentTime
-    let partTime = main_state.segs[main_state.cur][0]
-    let nextTime =
+    let cur_time = audio_el.currentTime
+    let part_time = main_state.segs[main_state.cur][0]
+    let next_time =
         main_state.cur < main_state.segs.length - 1
             ? main_state.segs[main_state.cur + 1][0]
-            : audioEl.duration
+            : audio_el.duration
 
-    if (main_state.cur > 0 && curTime < partTime) {
-        seek(-1)
+    if (main_state.cur > 0 && cur_time < part_time - 0.2) {
+        find_correct_segment(cur_time)
         return
     }
 
     if (
-        main_state.cur < main_state.segs.length - 2 &&
-        curTime > main_state.segs[main_state.cur + 2][0]
+        main_state.cur < main_state.segs.length - 1 &&
+        cur_time > main_state.segs[main_state.cur + 1][0] + 0.2
     ) {
-        seek(1)
+        find_correct_segment(cur_time)
         return
     }
 
-    if (main_state.cur === 0 && curTime < partTime && curTime >= partTime - 0.35) {
+    if (main_state.cur === 0 && cur_time < part_time && cur_time >= part_time - 0.35) {
         load_part()
     }
 
-    if (curTime >= nextTime) {
+    if (cur_time >= next_time - 0.1) {
         part_done()
     }
 
-    const progressPercentage = ((curTime - partTime) / (nextTime - partTime)) * 100
-    if (!isNaN(progressPercentage) && isFinite(progressPercentage)) {
-        part_progress_el.style.width = Math.min(100, Math.max(0, progressPercentage)) + '%'
+    const progress_percentage = ((cur_time - part_time) / (next_time - part_time)) * 100
+    if (!isNaN(progress_percentage) && isFinite(progress_percentage)) {
+        part_progress_el.style.width = Math.min(100, Math.max(0, progress_percentage)) + '%'
     } else {
         part_progress_el.style.width = '0%'
+    }
+}
+
+function find_correct_segment(current_time) {
+    if (!audio || !main_state.segs || main_state.segs.length === 0) return
+
+    let found_segment = false
+    let new_segment_index = main_state.cur
+
+    for (let i = 0; i < main_state.segs.length - 1; i++) {
+        if (current_time >= main_state.segs[i][0] && current_time < main_state.segs[i + 1][0]) {
+            new_segment_index = i
+            found_segment = true
+            break
+        }
+    }
+
+    if (!found_segment && current_time >= main_state.segs[main_state.segs.length - 1][0]) {
+        new_segment_index = main_state.segs.length - 1
+        found_segment = true
+    }
+
+    const part_start_val = parseInt(settings.part_start, 10) || 1
+    const part_end_val = parseInt(settings.part_end, 10) || main_state.segs.length
+
+    if (new_segment_index + 1 < part_start_val || new_segment_index + 1 > part_end_val) {
+        audio.pause()
+        return
+    }
+
+    if (new_segment_index !== main_state.cur) {
+        main_state.cur = new_segment_index
+        main_state.part_reps = 1
+        load_part()
     }
 }
 
@@ -513,19 +551,32 @@ function handle_matn_change(event) {
         show_error('خطأ في التحديد', 'لم يتم العثور على عنصر الهدف في الحدث')
         return
     }
-    let selectedValue = target.value
-    if (selectedValue === null || selectedValue === undefined) {
+    let selected_value = target.value
+    if (selected_value === null || selected_value === undefined) {
         show_error('خطأ في التحديد', 'لم يتم العثور على قيمة للعنصر المحدد')
         return
     }
 
-    let selectedText = selectedValue
+    let selected_text = selected_value
     if (target.options && target.selectedIndex !== undefined) {
         const option = target.options[target.selectedIndex]
         if (option) {
-            selectedText = option.text || selectedValue
+            selected_text = option.text || selected_value
         }
     }
-    load_matn(selectedText, selectedValue)
+    load_matn(selected_text, selected_value)
+}
+
+function handle_start_change(e) {
+    if (e?.detail?.value) {
+        main_state.cur = e.detail.value - 1
+        main_state.part_reps = 1
+
+        load_part()
+
+        if (audio && main_state.segs && main_state.segs[main_state.cur]) {
+            audio.currentTime = main_state.segs[main_state.cur][0]
+        }
+    }
 }
 </script>
